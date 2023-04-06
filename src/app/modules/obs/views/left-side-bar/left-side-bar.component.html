@@ -1,0 +1,12 @@
+<mat-list class="side-nav-menu">
+  <mat-list-item>
+    <h1 mat-header>Obs Controller</h1>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <div *ngFor="let link of obsLinks">
+    <mat-list-item class="link" [routerLink]="link.href" routerLinkActive="current-position">
+      {{ link.label }}
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </div>
+</mat-list>
