@@ -1,0 +1,19 @@
+<mat-list class="side-nav-menu">
+  <mat-list-item>
+    <h1 mat-header>TwitchBot</h1>
+    <!--
+    añadir un icono para expandir y contraer el menu
+     <mat-icon matListItemIcon>expand_more</mat-icon> -->
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <div *ngFor="let link of obsLinks">
+    <mat-list-item
+      class="link"
+      [routerLink]="link.href"
+      routerLinkActive="current-position"
+    >
+      {{ link.label }}
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </div>
+</mat-list>

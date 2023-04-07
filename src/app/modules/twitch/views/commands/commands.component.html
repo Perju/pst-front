@@ -1,0 +1,73 @@
+<mat-card class="commands-list">
+  <form [formGroup]="formGroupCommands" (ngSubmit)="onFormSubmit()">
+    <mat-card-header>
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-card-title>Comando</mat-card-title>
+          </td>
+          <td class="float-right">
+            <button mat-raised-button color="accent">Guardar</button>
+          </td>
+          <td class="float-right">
+            <mat-slide-toggle formControlName="activo">Activo</mat-slide-toggle>
+          </td>
+        </tr>
+      </table>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" placeholder="Nombre" />
+              <mat-error *ngIf="formGroupCommands.get('nombre')?.invalid">
+                {{ getErrorMessage('nombre') }}
+              </mat-error>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Comando</mat-label>
+              <input matInput formControlName="comando" placeholder="!comando" />
+              <mat-error *ngIf="formGroupCommands.get('comando')?.invalid">
+                {{ getErrorMessage('comando') }}
+              </mat-error>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Tiempo de espera</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="colddown"
+                placeholder="5"
+              />
+              <mat-error *ngIf="formGroupCommands.get('colddown')?.invalid">
+                {{ getErrorMessage('colddown') }}
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <mat-form-field class="mensaje-input">
+              <mat-label>Mensaje</mat-label>
+              <textarea
+                matInput
+                formControlName="mensaje"
+                placeholder="Hola chat"
+              ></textarea>
+              <mat-error *ngIf="formGroupCommands.get('intervalo')?.invalid">
+                {{ getErrorMessage('mensaje') }}
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-card-footer> </mat-card-footer>
+  </form>
+</mat-card>
