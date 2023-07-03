@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class CommonService {
 
-  private isPropVisible$: Subject<any> = new Subject<any>();
-  private rightSidebarData$: Subject<unknown> = new Subject<unknown>;
+  private isPropVisible$: ReplaySubject<any> = new ReplaySubject<boolean>(1);
+  private rightSidebarData$: ReplaySubject<unknown> = new ReplaySubject<unknown>(1);
 
   getRightSidebarData(): Observable<any> {
     return this.rightSidebarData$.asObservable();

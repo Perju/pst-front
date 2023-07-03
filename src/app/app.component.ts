@@ -21,6 +21,6 @@ export class AppComponent implements OnInit {
   }
 
   public closeProperties() {
-    // this.commonService.setIsPropVisible(false);
+    this.commonService.setIsPropVisible(false);
   }
 }
