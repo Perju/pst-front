@@ -4,6 +4,7 @@ export class OBSRequest {
   static readonly GetSceneList = 'GetSceneList'
   static readonly SetCurrentProgramScene = "SetCurrentProgramScene"
 }
+
 export class OBSEvents {
   static readonly ConnectionClosed = 'ConnectionClosed'
 }

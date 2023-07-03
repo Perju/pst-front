@@ -42,6 +42,7 @@ export class TimersComponent implements OnInit {
     }
     return ''
   }
+
   onFormSubmit() {
     if(this.formGroupTimers.invalid){
       console.log("Formulario invalido")
