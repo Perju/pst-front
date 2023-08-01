@@ -9,6 +9,7 @@ import { MaterialUiModule } from '../material-ui.module';
 import { TwitchRoutingModule } from './twitch-routing.module'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     TimersComponent,
     TwitchLoginComponent,
     CommandsComponent,
-    TwitchLeftSideBarComponent
-  ]
+    TwitchLeftSideBarComponent,
+HttpClientModule
+  ],
+  providers: [HttpClientModule]
 })
 export class TwitchModule {}
