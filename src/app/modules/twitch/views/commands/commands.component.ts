@@ -5,8 +5,8 @@ import {
   Validators,
   AbstractControl
 } from '@angular/forms'
-import { TwitchCommand } from '../../models/twitch.models';
-import { HttpClient } from '@angular/common/http';
+import { TwitchCommand } from '../../models/twitch.models'
+import { HttpClient } from '@angular/common/http'
 
 /* Validator */
 /* Mover a una clase para los validadores */
@@ -19,29 +19,33 @@ function onlyNumbersAllowed(control: AbstractControl) {
 @Component({
   selector: 'twitch-commands',
   templateUrl: './commands.component.html',
-  styleUrls: ['./commands.component.sass']
+  styleUrls: ['./commands.component.scss']
 })
 export class CommandsComponent implements OnInit {
-  public commands: TwitchCommand[] = [];
+  public commands: TwitchCommand[] = []
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const body = { service: 'PST_TWITCH_READ_COMMANDS' };
-    this.http.post<any>('http://localhost:5000/api/twitch/read', body).subscribe({
-      next: data => {this.commands = data; console.log(data); }, 
-      error: (err) => {console.log(err)},
-      complete: () => {}
-  });
+    const body = { service: 'PST_TWITCH_READ_COMMANDS' }
+    this.http
+      .post<any>('http://localhost:5000/api/twitch/read', body)
+      .subscribe({
+        next: (data) => {
+          this.commands = data
+          console.log(data)
+        },
+        error: (err) => {
+          console.log(err)
+        },
+        complete: () => {}
+      })
   }
 
   public formGroupCommands = new FormGroup({
     comando: new FormControl('', [Validators.required]),
     nombre: new FormControl('', [Validators.required]),
-    colddown: new FormControl('', [
-      Validators.required,
-      onlyNumbersAllowed
-    ]),
+    colddown: new FormControl('', [Validators.required, onlyNumbersAllowed]),
     mensaje: new FormControl('', [Validators.required]),
     activo: new FormControl(false)
   })
@@ -61,5 +65,17 @@ export class CommandsComponent implements OnInit {
       return
     }
     console.log('onFormSubmit', this.formGroupCommands.value)
+  }
+
+  getActiveIcon(isActive: boolean) {
+    if (isActive) {
+      return 'check_circle'
+    } else {
+      return 'cancel'
+    }
+  }
+  getUserLevel(level: number) {
+    const userLevels = ['Viewer', 'Follower', 'Sub', 'Vip', 'Mod', 'Streamer']
+    return userLevels[level]
   }
 }

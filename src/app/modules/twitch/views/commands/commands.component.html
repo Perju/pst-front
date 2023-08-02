@@ -1,4 +1,4 @@
-<mat-card class="commands-list">
+<mat-card class="command-input">
   <form [formGroup]="formGroupCommands" (ngSubmit)="onFormSubmit()">
     <mat-card-header>
       <table class="example-full-width" cellspacing="0">
@@ -30,7 +30,11 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Comando</mat-label>
-              <input matInput formControlName="comando" placeholder="!comando" />
+              <input
+                matInput
+                formControlName="comando"
+                placeholder="!comando"
+              />
               <mat-error *ngIf="formGroupCommands.get('comando')?.invalid">
                 {{ getErrorMessage('comando') }}
               </mat-error>
@@ -71,3 +75,55 @@
     <mat-card-footer> </mat-card-footer>
   </form>
 </mat-card>
+<ng-container *ngFor="let command of commands">
+  <mat-card class="commands-list">
+    <mat-card-header>
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-card-title>Comando</mat-card-title>
+          </td>
+        </tr>
+      </table>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="example-full-width plain" cellspacing="0">
+        <tr>
+          <td>
+            <div class="col">
+              <mat-label>Nombre</mat-label>
+              <span>{{ command.name }}</span>
+            </div>
+          </td>
+          <td class="col">
+            <div class="col">
+              <mat-label>Nivel de usuario</mat-label>
+              <span>{{ getUserLevel(command.usrLvl) }}</span>
+            </div>
+          </td>
+          <td class="">
+            <div class="float-right col">
+              <mat-label>Activo</mat-label>
+              <mat-icon
+                [fontIcon]="getActiveIcon(command.active)"
+                [ngClass]="{
+                  iconGreen: command.active,
+                  iconRed: !command.active
+                }"
+              ></mat-icon>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6 col">
+            <div class="col">
+              <mat-label>Mensaje</mat-label>
+              <span>{{ command.response }}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-card-footer> </mat-card-footer>
+  </mat-card>
+</ng-container>
