@@ -11,7 +11,7 @@ import { CommonService } from '../../services/common.service';
 @Component({
   selector: 'obs-controller',
   templateUrl: './controller.component.html',
-  styleUrls: ['./controller.component.sass'],
+  styleUrls: ['./controller.component.sass']
 })
 export class ControllerComponent implements OnInit {
   public scenes: Scene[] = [];
@@ -23,7 +23,7 @@ export class ControllerComponent implements OnInit {
     this.scenes = [
       { sceneName: 'Inicio', sceneIndex: 0 },
       { sceneName: 'Jugando', sceneIndex: 1 },
-      { sceneName: 'Charlando', sceneIndex: 2 },
+      { sceneName: 'Charlando', sceneIndex: 2 }
     ];
   }
 
@@ -40,7 +40,7 @@ export class ControllerComponent implements OnInit {
         this.scenes.forEach((scene) => {
           this._getSources(scene);
         });
-      },
+      }
     });
   }
 
@@ -49,7 +49,7 @@ export class ControllerComponent implements OnInit {
     this.obsApi.getSources(scene.sceneName).subscribe({
       next: (data) => (scene.sceneItems = data.sceneItems.reverse()),
       error: (error) => console.log(error),
-      complete: () => {},
+      complete: () => {}
     });
   }
 
@@ -57,7 +57,7 @@ export class ControllerComponent implements OnInit {
     this.obsApi.sendCommand(OBSRequest.SetSceneItemEnabled, {
       sceneName: sceneName,
       sceneItemId: sceneItemId,
-      sceneItemEnabled: $event.checked,
+      sceneItemEnabled: $event.checked
     });
   }
 
@@ -73,28 +73,28 @@ export class ControllerComponent implements OnInit {
     $event.stopPropagation();
     this.obsApi
       .sendCommand(OBSRequest.SetCurrentProgramScene, {
-        sceneName: sceneName,
+        sceneName: sceneName
       })
       .subscribe({
-        next: () => (this.currentScene.sceneName = sceneName),
+        next: () => (this.currentScene.sceneName = sceneName)
       });
     console.log('setCurrentScene');
   }
 
   public showProperties(scene: any, sceneItem: Source) {
-    console.log()
-    let request: OBSRequestTypes["GetSceneItemTransform"] = {
+    console.log();
+    const request: OBSRequestTypes['GetSceneItemTransform'] = {
       sceneName: scene.sceneName,
-      sceneItemId: sceneItem.sceneItemId,
+      sceneItemId: sceneItem.sceneItemId
     };
-    this.obsApi.sendCommand("GetSceneItemTransform", request).subscribe({
+    this.obsApi.sendCommand('GetSceneItemTransform', request).subscribe({
       next: (data) => {
         this.commonService.setRightSidebarData({
           sourceName: sceneItem.sourceName,
           transformData: data
-        })
+        });
       }
-    })
+    });
     this.commonService.setIsPropVisible(true);
   }
 }

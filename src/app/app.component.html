@@ -1,32 +1,41 @@
 <mat-grid-tile-header>
-    <mat-toolbar color="primary"> Perju StreamToolBox </mat-toolbar>
+  <mat-toolbar color="primary"> Perju StreamToolBox </mat-toolbar>
 </mat-grid-tile-header>
 <mat-drawer-container>
-    <mat-drawer mode="side" opened class="left-sidebar">
-        <!-- TODO cambiar a router outlet con nombre -->
-        <obs-left-side-bar></obs-left-side-bar>
-        <twitch-left-side-bar></twitch-left-side-bar>
-    </mat-drawer>
-    <mat-drawer #drawer mode="side" position="end" [opened]="isOpened" class="right-sidebar">
-        <div class="float-center">
-            <button mat-raised-button color="accent" type="button" (click)="closeProperties()">
-                Cerrar
-            </button>
-        </div>
-        <mat-divider></mat-divider>
-        <!-- TODO cambiar a router outlet con nombre -->
-        <obs-right-side-bar></obs-right-side-bar>
-    </mat-drawer>
-    <mat-drawer-content class="main-content">
-        <!-- TODO añadir scroll con https://material.angular.io/cdk/scrolling/api -->
-        <router-outlet></router-outlet>
-    </mat-drawer-content>
+  <mat-drawer mode="side" opened class="left-sidebar">
+    <!-- TODO cambiar a router outlet con nombre -->
+    <obs-left-side-bar></obs-left-side-bar>
+    <twitch-left-side-bar></twitch-left-side-bar>
+  </mat-drawer>
+  <mat-drawer
+    #drawer
+    mode="side"
+    position="end"
+    [opened]="isOpened"
+    class="right-sidebar"
+  >
+    <div class="float-center">
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="closeProperties()"
+      >
+        Cerrar
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <!-- TODO cambiar a router outlet con nombre -->
+    <obs-right-side-bar></obs-right-side-bar>
+  </mat-drawer>
+  <mat-drawer-content class="main-content">
+    <!-- TODO añadir scroll con https://material.angular.io/cdk/scrolling/api -->
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
 </mat-drawer-container>
 <mat-grid-tile-footer>
-    <mat-toolbar color="primary">
-        <h5>©Perju</h5>
-    </mat-toolbar>
+  <mat-toolbar color="primary">
+    <h5>©Perju</h5>
+  </mat-toolbar>
 </mat-grid-tile-footer>
-<div>
-    Hola mundo
-</div>
+<div>Hola mundo</div>

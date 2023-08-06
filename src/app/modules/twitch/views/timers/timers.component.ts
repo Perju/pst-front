@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   Validators,
   AbstractControl
-} from '@angular/forms'
+} from '@angular/forms';
 
 /* Validator */
 function onlyNumbersAllowed(control: AbstractControl) {
   if (isNaN(control.value)) {
-    return { onlyNumbers: true }
+    return { onlyNumbers: true };
   }
-  return null
+  return null;
 }
 
 @Component({
@@ -22,13 +22,10 @@ function onlyNumbersAllowed(control: AbstractControl) {
 export class TimersComponent implements OnInit {
   public formGroupTimers = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
-    intervalo: new FormControl('', [
-      Validators.required,
-      onlyNumbersAllowed
-    ]),
+    intervalo: new FormControl('', [Validators.required, onlyNumbersAllowed]),
     mensaje: new FormControl('', [Validators.required]),
     activo: new FormControl(false)
-  })
+  });
 
   constructor() {}
 
@@ -36,18 +33,18 @@ export class TimersComponent implements OnInit {
 
   getErrorMessage(controlName: string) {
     if (this.formGroupTimers.get(controlName)?.hasError('onlyNumbers')) {
-      return 'Solo numeros'
+      return 'Solo numeros';
     } else if (this.formGroupTimers.get(controlName)?.hasError('required')) {
-      return `Introduce un ${controlName}`
+      return `Introduce un ${controlName}`;
     }
-    return ''
+    return '';
   }
 
   onFormSubmit() {
-    if(this.formGroupTimers.invalid){
-      console.log("Formulario invalido")
+    if (this.formGroupTimers.invalid) {
+      console.log('Formulario invalido');
       return;
     }
-    console.log('onFormSubmit', this.formGroupTimers.value)
+    console.log('onFormSubmit', this.formGroupTimers.value);
   }
 }

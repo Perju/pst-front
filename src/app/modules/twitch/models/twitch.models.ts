@@ -38,5 +38,5 @@ export enum UserLevel {
   SUB,
   VIP,
   MOD,
-  STREAMER,
+  STREAMER
 }

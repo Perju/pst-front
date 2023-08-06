@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'twitch-left-side-bar',
@@ -12,7 +12,7 @@ export class TwitchLeftSideBarComponent implements OnInit {
     { label: 'Temporizadres', href: '/twitch/timers' },
     { label: 'Comandos', href: '/twitch/commands' },
     { label: 'Ayuda', href: '/twitch/help' }
-  ]
+  ];
 
   constructor(public router: Router) {}
 

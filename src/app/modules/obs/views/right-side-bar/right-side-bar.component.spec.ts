@@ -8,9 +8,8 @@ describe('ObsRightSideBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ObsRightSideBarComponent ]
-    })
-    .compileComponents();
+      declarations: [ObsRightSideBarComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ObsRightSideBarComponent);
     component = fixture.componentInstance;

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { CommonService } from './modules/obs/services/common.service'
+import { Component, OnInit } from '@angular/core';
+import { CommonService } from './modules/obs/services/common.service';
 
 @Component({
   selector: 'app-root',
@@ -7,17 +7,17 @@ import { CommonService } from './modules/obs/services/common.service'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Perju Stream Toolbox'
-  isOpened = true
+  title = 'Perju Stream Toolbox';
+  isOpened = true;
 
   constructor(private commonService: CommonService) {}
 
   ngOnInit(): void {
     this.commonService.isPropVisible().subscribe({
       next: (data: boolean) => {
-        this.isOpened = data
+        this.isOpened = data;
       }
-    })
+    });
   }
 
   public closeProperties() {

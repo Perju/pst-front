@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'obs-left-side-bar',
@@ -10,7 +10,7 @@ export class ObsLeftSideBarComponent implements OnInit {
     { label: 'Conectar', href: '/obs/login' },
     { label: 'Controlador', href: '/obs/controller' },
     { label: 'Ayuda', href: '/obs/help' }
-  ]
+  ];
 
   constructor() {}
 

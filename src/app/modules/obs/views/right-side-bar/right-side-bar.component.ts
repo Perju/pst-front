@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../services/common.service';
 
 @Component({
@@ -16,10 +16,10 @@ export class ObsRightSideBarComponent implements OnInit {
       next: (data: any) => {
         this.sideElems = {
           name: data.sourceName,
-          transform: data.transformData.sceneItemTransform,
+          transform: data.transformData.sceneItemTransform
         };
-        console.log("RightSidebarData", data)
+        console.log('RightSidebarData', data);
       }
-    })
+    });
   }
 }

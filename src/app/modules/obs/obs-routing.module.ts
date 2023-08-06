@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core'
-import { RouterModule, Routes } from '@angular/router'
-import { HelpComponent } from './views/help/help.component'
-import { LoginComponent } from './views/login/login.component'
-import { ControllerComponent } from './views/controller/controller.component'
-import { LoggedInGuardService } from './services/logged-in-guard.service'
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HelpComponent } from './views/help/help.component';
+import { LoginComponent } from './views/login/login.component';
+import { ControllerComponent } from './views/controller/controller.component';
+import { LoggedInGuardService } from './services/logged-in-guard.service';
 
 const obsRoutes: Routes = [
   {
@@ -18,9 +18,9 @@ const obsRoutes: Routes = [
       { path: 'login', component: LoginComponent }
     ]
   }
-]
+];
 
-const routes: Routes = [...obsRoutes]
+const routes: Routes = [...obsRoutes];
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

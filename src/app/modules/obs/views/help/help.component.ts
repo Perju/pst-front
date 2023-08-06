@@ -5,6 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './help.component.html',
   styleUrls: ['./help.component.sass']
 })
-export class HelpComponent {
-
-}
+export class HelpComponent {}
