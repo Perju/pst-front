@@ -6,7 +6,8 @@ import {
   AbstractControl
 } from '@angular/forms';
 import { TwitchCommand } from '../../models/twitch.models';
-import { HttpClient } from '@angular/common/http';
+import { TwitchPstService } from '../../services/twitch-pst.service';
+// import { TwitchPstService } from '../../services/twitch-pst.service';
 
 /* Validator */
 /* Mover a una clase para los validadores */
@@ -16,6 +17,7 @@ function onlyNumbersAllowed(control: AbstractControl) {
   }
   return null;
 }
+
 @Component({
   selector: 'twitch-commands',
   templateUrl: './commands.component.html',
@@ -24,22 +26,14 @@ function onlyNumbersAllowed(control: AbstractControl) {
 export class CommandsComponent implements OnInit {
   public commands: TwitchCommand[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private twitchPstService: TwitchPstService) {}
 
   ngOnInit(): void {
-    const body = { service: 'PST_TWITCH_READ_COMMANDS' };
-    this.http
-      .post<any>('http://localhost:5000/api/twitch/read', body)
-      .subscribe({
-        next: (data) => {
-          this.commands = data;
-          console.log(data);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-        complete: () => {}
-      });
+    this.twitchPstService.getCommands().subscribe({
+      next: (data) => (this.commands = data),
+      error: (err) => console.log(err),
+      complete: () => console.log('getCommands() complete')
+    });
   }
 
   public formGroupCommands = new FormGroup({

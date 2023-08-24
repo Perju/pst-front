@@ -5,6 +5,8 @@ import {
   Validators,
   AbstractControl
 } from '@angular/forms';
+import { TwitchPstService } from '../../services/twitch-pst.service';
+import { TwitchTimer } from '../../models/twitch.models';
 
 /* Validator */
 function onlyNumbersAllowed(control: AbstractControl) {
@@ -17,9 +19,11 @@ function onlyNumbersAllowed(control: AbstractControl) {
 @Component({
   selector: 'twitch-timers',
   templateUrl: './timers.component.html',
-  styleUrls: ['./timers.component.sass']
+  styleUrls: ['./timers.component.scss']
 })
 export class TimersComponent implements OnInit {
+  public timers: TwitchTimer[] = [];
+
   public formGroupTimers = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
     intervalo: new FormControl('', [Validators.required, onlyNumbersAllowed]),
@@ -27,9 +31,15 @@ export class TimersComponent implements OnInit {
     activo: new FormControl(false)
   });
 
-  constructor() {}
+  constructor(private twitchPstService: TwitchPstService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.twitchPstService.getTimers().subscribe({
+      next: (data) => (this.timers = data),
+      error: (err) => console.log(err),
+      complete: () => console.log('getTimers() complete')
+    });
+  }
 
   getErrorMessage(controlName: string) {
     if (this.formGroupTimers.get(controlName)?.hasError('onlyNumbers')) {
@@ -46,5 +56,13 @@ export class TimersComponent implements OnInit {
       return;
     }
     console.log('onFormSubmit', this.formGroupTimers.value);
+  }
+
+  getActiveIcon(isActive: boolean) {
+    if (isActive) {
+      return 'check_circle';
+    } else {
+      return 'cancel';
+    }
   }
 }
