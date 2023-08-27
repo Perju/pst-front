@@ -50,10 +50,27 @@ export class TimersComponent implements OnInit {
     return '';
   }
 
-  onFormSubmit() {
+  addTimer() {
     if (this.formGroupTimers.invalid) {
       console.log('Formulario invalido');
       return;
+    }
+
+    const { nombre, mensaje, intervalo } = this.formGroupTimers.value;
+    if (
+      nombre !== null &&
+      nombre !== undefined &&
+      mensaje !== null &&
+      mensaje !== undefined &&
+      intervalo !== null &&
+      intervalo !== undefined
+    ) {
+      this.twitchPstService.addTimer({
+        name: nombre,
+        message: mensaje,
+        period: Number.parseInt(intervalo),
+        active: true
+      });
     }
     console.log('onFormSubmit', this.formGroupTimers.value);
   }

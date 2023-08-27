@@ -1,5 +1,6 @@
 <mat-card class="timers-list">
-  <form [formGroup]="formGroupTimers" (ngSubmit)="onFormSubmit()">
+  <!-- Formulario para añadir un temporizador -->
+  <form [formGroup]="formGroupTimers" (ngSubmit)="addTimer()">
     <mat-card-header>
       <table class="example-full-width" cellspacing="0">
         <tr>
@@ -62,6 +63,8 @@
     <mat-card-footer> </mat-card-footer>
   </form>
 </mat-card>
+
+<!-- Lista de temporizadores -->
 <ng-container *ngFor="let timer of timers">
   <mat-card class="timers-list">
     <mat-card-header>
