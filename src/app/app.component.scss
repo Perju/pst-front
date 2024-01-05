@@ -10,6 +10,24 @@ mat-drawer-content {
   min-height: 75vh;
 }
 
+/* Estilos del menu de navegacion superior */
+.top-side-nav {
+  gap: .2em;
+  font-size: .5em;
+  span {
+    border: solid 1px white;
+    padding: .3em;
+    border-radius: 4px;
+    a {
+      text-decoration: none;
+    }
+  }
+  span:hover {
+    background-color: purple;
+  }
+
+}
+
 .float-center {
   display: flex;
   justify-content: center;

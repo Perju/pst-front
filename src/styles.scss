@@ -1,5 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-@import "@angular/material/prebuilt-themes/purple-green.css";
+//@import "@angular/material/prebuilt-themes/purple-green.css";
 body {
     margin: 0;
 }
+
+@import "@angular/material/theming";
+@include mat-core();
+
+$my-app-primary: mat-palette($mat-indigo);
+$my-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$my-app-warn: mat-palette($mat-red);
+
+$my-app-theme: mat-dark-theme((color: (primary: $my-app-primary, accent: $my-app-accent, warn: $my-app-warn)));
+
+@include angular-material-theme($my-app-theme);
