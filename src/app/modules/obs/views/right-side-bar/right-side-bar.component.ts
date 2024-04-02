@@ -4,7 +4,7 @@ import { CommonService } from '../../services/common.service';
 @Component({
   selector: 'obs-right-side-bar',
   templateUrl: './right-side-bar.component.html',
-  styleUrls: ['./right-side-bar.component.sass']
+  styleUrls: ['./right-side-bar.component.scss']
 })
 export class ObsRightSideBarComponent implements OnInit {
   public sideElems: any;

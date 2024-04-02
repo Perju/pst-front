@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'twitch-left-side-bar',
   templateUrl: './left-side-bar.component.html',
-  styleUrls: ['./left-side-bar.component.sass']
+  styleUrls: ['./left-side-bar.component.scss']
 })
 export class TwitchLeftSideBarComponent implements OnInit {
   public obsLinks: { label: string; href: string; class?: string }[] = [

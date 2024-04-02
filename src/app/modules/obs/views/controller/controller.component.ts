@@ -11,7 +11,7 @@ import { CommonService } from '../../services/common.service';
 @Component({
   selector: 'obs-controller',
   templateUrl: './controller.component.html',
-  styleUrls: ['./controller.component.sass']
+  styleUrls: ['./controller.component.scss']
 })
 export class ControllerComponent implements OnInit {
   public scenes: Scene[] = [];
