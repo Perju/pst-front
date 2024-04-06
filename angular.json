@@ -56,7 +56,41 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
+            },
+            "desktop": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.desktop.ts"
+                }
+              ]
+            },
+            "obsweb": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.obsweb.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -69,6 +103,12 @@
             },
             "development": {
               "browserTarget": "perju-stream-toolbox:build:development"
+            },
+            "desktop": {
+              "browserTarget": "perju-stream-toolbox:build:desktop"
+            },
+            "obsweb": {
+              "browserTarget": "perju-stream-toolbox:build:obsweb"
             }
           },
           "defaultConfiguration": "development"
