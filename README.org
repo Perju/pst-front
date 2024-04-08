@@ -7,3 +7,12 @@ adelante se añadirán otras funcionalidades.
 /TODO revisar si es necesario con la githubaction/
 para evitar el error del strip al compilar, se puede deshabilitar la opción
 strip con ~NO_STRIP=true %comando%~
+
+** Entornos de angular
+Se ha creado la configuración de entornos para Angular y aparte de los dos
+entornos básicos =Desarrollo= y =Produccion= se han añadido otros dos entornos mas.
+
+- Desktop :: Entorno para compilar la aplicación de escritorio y que utilice el
+  back creado en Rust.
+- Obsweb :: Entorno creado para exportar solo el modulo del controlador de obs
+  como una aplicación web.
