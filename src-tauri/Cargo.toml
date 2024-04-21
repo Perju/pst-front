@@ -1,11 +1,11 @@
 [package]
 name = "PST"
-version = "0.9.3"
+version = "0.9.4"
 description = "A collection of streaming tools"
 authors = ["Perju"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "PST"
 edition = "2021"
 rust-version = "1.60"
 
