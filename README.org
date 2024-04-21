@@ -16,3 +16,15 @@ entornos básicos =Desarrollo= y =Produccion= se han añadido otros dos entornos
   back creado en Rust.
 - Obsweb :: Entorno creado para exportar solo el modulo del controlador de obs
   como una aplicación web.
+
+* Documentación de desarrollo :dev:
+** Gestión de ramas
+- master :: la principal.
+- release :: para publicar versiones.
+- develop :: para ir probando los nuevos desarrollos.
+** Como subir de versión
+- Actualizar el número de versión en los archivos
+  - ~./src-tauri/tauri.conf.json~
+  - ~./src-tauri/Cargo.toml~
+  - ~./package.json~
+- Fusionar "=master=" en =release=
