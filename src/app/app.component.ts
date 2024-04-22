@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from './modules/obs/services/common.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,9 @@ import { CommonService } from './modules/obs/services/common.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Perju Stream Toolbox';
-  isOpened = true;
+  public title = 'Perju Stream Toolbox';
+  public isOpened = true;
+  public obsweb = false;
 
   constructor(private commonService: CommonService) {}
 
@@ -18,6 +20,9 @@ export class AppComponent implements OnInit {
         this.isOpened = data;
       }
     });
+    if (environment.obsweb) {
+      this.obsweb = true;
+    }
   }
 
   public closeProperties() {
