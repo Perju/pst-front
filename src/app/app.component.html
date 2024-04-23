@@ -1,32 +1,27 @@
 <mat-grid-tile-header>
-  <mat-toolbar color="primary"> Perju StreamToolBox </mat-toolbar>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span class="title">Perju StreamToolBox</span>
+    </mat-toolbar-row>
+    <mat-toolbar-row class="nav">
+      <app-nav></app-nav>
+    </mat-toolbar-row>
+  </mat-toolbar>
 </mat-grid-tile-header>
 <mat-drawer-container>
   <mat-drawer mode="side" opened class="left-sidebar">
-    <!-- TODO cambiar a router outlet con nombre -->
-    <obs-left-side-bar></obs-left-side-bar>
-    <twitch-left-side-bar *ngIf="!obsweb"></twitch-left-side-bar>
+    <router-outlet name="leftBar"></router-outlet>
   </mat-drawer>
-  <mat-drawer
-    #drawer
-    mode="side"
-    position="end"
-    [opened]="isOpened"
-    class="right-sidebar"
-  >
+  <mat-drawer #drawer mode="side" position="end" [opened]="isOpened" class="right-sidebar">
     <div class="float-center">
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="closeProperties()"
-      >
+      <button mat-raised-button color="accent" type="button" (click)="closeProperties()">
         Cerrar
       </button>
     </div>
     <mat-divider></mat-divider>
     <!-- TODO cambiar a router outlet con nombre -->
     <obs-right-side-bar></obs-right-side-bar>
+    <!-- <router-outlet name="right"></router-outlet> -->
   </mat-drawer>
   <mat-drawer-content class="main-content">
     <!-- TODO añadir scroll con https://material.angular.io/cdk/scrolling/api -->
@@ -38,4 +33,3 @@
     <h5>©Perju</h5>
   </mat-toolbar>
 </mat-grid-tile-footer>
-<div>Hola mundo</div>

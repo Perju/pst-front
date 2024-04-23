@@ -1,5 +1,8 @@
-:is(.mat-grid-tile-header, .mat-grid-tile-footer) .mat-toolbar {
-  height: 2em;
+.mat-toolbar>.mat-toolbar-row:first-child {
+  height: 4em;
+}
+
+mat-toolbar-row .title {
   font-size: 4em;
 }
 
