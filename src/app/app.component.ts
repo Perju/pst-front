@@ -11,11 +11,7 @@ export class AppComponent implements OnInit {
   public title = 'Perju Stream Toolbox';
   public isOpened = true;
 
-<<<<<<< HEAD
-  constructor(private commonService: CommonService) { }
-=======
   constructor(private commonService: CommonService, public router: Router) {}
->>>>>>> 1c64b74 (nueva estructura de navegacion y tema de material)
 
   ngOnInit(): void {
     this.commonService.isPropVisible().subscribe({
