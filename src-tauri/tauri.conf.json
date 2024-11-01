@@ -28,7 +28,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "perju-stream-tools",
+      "identifier": "perju-stream-toolbox",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

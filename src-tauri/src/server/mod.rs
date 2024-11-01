@@ -19,7 +19,8 @@ pub async fn init(app: AppHandle) -> std::io::Result<()> {
         App::new()
             .app_data(tauri_app.clone())
             .wrap(middleware::Logger::default())
-            .service(handlers::example::handle)
+            .service(handlers::twitch::read)
+            .service(handlers::twitch::create)
     })
     .bind(("127.0.0.1", 4875))?
     .run()
