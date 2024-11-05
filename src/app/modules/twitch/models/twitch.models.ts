@@ -12,10 +12,11 @@ export interface ChatBot {
 
 export interface TwitchCommand {
   id?: number;
-  name: string;
-  response: string;
   active: boolean;
-  usrLvl: UserLevel;
+  name: string;
+  colddown: number;
+  response: string;
+  usr_lvl: UserLevel;
 }
 
 export interface TwitchTimer {

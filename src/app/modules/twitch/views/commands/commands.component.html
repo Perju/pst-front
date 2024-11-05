@@ -10,7 +10,7 @@
             <button mat-raised-button color="accent">Guardar</button>
           </td>
           <td class="float-right">
-            <mat-slide-toggle formControlName="activo">Activo</mat-slide-toggle>
+            <mat-slide-toggle formControlName="active">Activo</mat-slide-toggle>
           </td>
         </tr>
       </table>
@@ -21,22 +21,9 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Nombre</mat-label>
-              <input matInput formControlName="nombre" placeholder="Nombre" />
+              <input matInput formControlName="name" placeholder="Nombre" />
               <mat-error *ngIf="formGroupCommands.get('nombre')?.invalid">
-                {{ getErrorMessage('nombre') }}
-              </mat-error>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field class="example-full-width">
-              <mat-label>Comando</mat-label>
-              <input
-                matInput
-                formControlName="comando"
-                placeholder="!comando"
-              />
-              <mat-error *ngIf="formGroupCommands.get('comando')?.invalid">
-                {{ getErrorMessage('comando') }}
+                {{ getErrorMessage('name') }}
               </mat-error>
             </mat-form-field>
           </td>
@@ -54,6 +41,20 @@
               </mat-error>
             </mat-form-field>
           </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Nivel de usuario</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="usr_lvl"
+                placeholder="5"
+              />
+              <mat-error *ngIf="formGroupCommands.get('usr_lvl')?.invalid">
+                {{ getErrorMessage('usr_lvl') }}
+              </mat-error>
+            </mat-form-field>
+          </td>
         </tr>
         <tr>
           <td colspan="6">
@@ -61,7 +62,7 @@
               <mat-label>Mensaje</mat-label>
               <textarea
                 matInput
-                formControlName="mensaje"
+                formControlName="message"
                 placeholder="Hola chat"
               ></textarea>
               <mat-error *ngIf="formGroupCommands.get('intervalo')?.invalid">
@@ -98,7 +99,7 @@
           <td class="col">
             <div class="col">
               <mat-label>Nivel de usuario</mat-label>
-              <span>{{ getUserLevel(command.usrLvl) }}</span>
+              <span>{{ getUserLevel(command.usr_lvl) }}</span>
             </div>
           </td>
           <td class="">
