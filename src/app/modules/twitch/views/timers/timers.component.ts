@@ -35,7 +35,7 @@ export class TimersComponent implements OnInit {
 
   ngOnInit(): void {
     this.twitchPstService.getTimers().subscribe({
-      next: (data) => (this.timers = data),
+      next: (data) => (this.timers = JSON.parse(data)),
       error: (err) => console.log(err),
       complete: () => console.log('getTimers() complete')
     });

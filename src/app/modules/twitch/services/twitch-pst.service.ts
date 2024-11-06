@@ -17,7 +17,9 @@ export class TwitchPstService {
   }
   addCommand(command: TwitchCommand) {
     const data: any = { ...command };
-    data.active = data.active ? 1 : 0;
+    data.usr_lvl = parseInt(data.usr_lvl);
+    // ID de un antes de insertarse en BBDD
+    data.id = -1;
     const body = { table: CONSTANTS.TWITCH_COMMANDS, data: data };
     return this.http.post<any>(CONSTANTS.TWITCH_CREATE_URL, body).subscribe({
       next: (data) => {
@@ -27,7 +29,8 @@ export class TwitchPstService {
   }
   addTimer(timer: TwitchTimer) {
     const data: any = { ...timer };
-    data.active = data.active ? 1 : 0;
+    // ID de un antes de insertarse en BBDD
+    data.id = -1;
     const body = { table: CONSTANTS.TWITCH_TIMERS, data: data };
     return this.http.post<any>(CONSTANTS.TWITCH_CREATE_URL, body).subscribe({
       next: (data) => {
