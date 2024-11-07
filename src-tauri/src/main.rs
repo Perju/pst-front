@@ -9,7 +9,7 @@ fn main() {
   tauri::Builder::default()
     .setup(|app|{
       let handle = app.handle();
-      let boxed_handle = Box::new(handle);
+      let boxed_handle = Box::new(handle.clone());
 
       thread::spawn(move || {
         server::init(*boxed_handle).unwrap();

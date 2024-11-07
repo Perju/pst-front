@@ -5,7 +5,7 @@ pub mod models;
 #[path="ddbb/mod.rs"]
 pub mod ddbb;
 
-use std::{sync::Mutex};
+use std::sync::Mutex;
 
 use actix_cors::Cors;
 use actix_web::{middleware, http, web, App, HttpServer};
