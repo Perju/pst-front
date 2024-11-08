@@ -9,7 +9,6 @@ import { ObsLeftSideBarComponent } from './views/left-side-bar/left-side-bar.com
 const obsRoutes: Routes = [
   {
     path: 'obs',
-    component: LoginComponent,
     children: [
       { path: 'help', component: HelpComponent },
       {
@@ -18,7 +17,6 @@ const obsRoutes: Routes = [
         canActivate: [LoggedInGuardService]
       },
       { path: 'login', component: LoginComponent },
-      { path: 'left-side-bar', component: ObsLeftSideBarComponent }
     ]
   },
   {
