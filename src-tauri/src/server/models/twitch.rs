@@ -18,6 +18,13 @@ pub struct Timer {
     pub period: i32,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AppToken {
+    pub id: i32,
+    pub client_id: String,
+    pub client_secret: String,
+}
+
 impl Command {
     pub fn new(id: i32, name: &str, response: &str, active: bool, usr_lvl: i32) -> Self {
         Command {

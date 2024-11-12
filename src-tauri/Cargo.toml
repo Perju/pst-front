@@ -7,7 +7,7 @@ license = ""
 repository = ""
 default-run = "PST"
 edition = "2021"
-rust-version = "1.60"
+rust-version = "1.84"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -22,6 +22,10 @@ serde_json = "1.0"
 futures = "0.3.31"
 rusqlite = { version = "0.32.1", features = ["bundled"] }
 actix-cors = "0.6.4"
+twitch_api = { version = "0.7.0-rc.8", features = ["twitch_oauth2", "helix", "client", "reqwest"] }
+reqwest = "0.12.9"
+tokio = { version = "1.41.1", features = ["full"]  }
+dotenv = "0.15.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

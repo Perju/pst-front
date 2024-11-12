@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::thread;
+use server::bots;
 
 mod server;
 
@@ -13,6 +14,9 @@ fn main() {
 
       thread::spawn(move || {
         server::init(*boxed_handle).unwrap();
+      });
+      thread::spawn(move || {
+        bots::twitch::main().unwrap();
       });
       Ok(())
     })

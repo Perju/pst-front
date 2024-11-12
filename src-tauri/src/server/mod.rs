@@ -4,6 +4,8 @@ mod handlers;
 pub mod models;
 #[path="ddbb/mod.rs"]
 pub mod ddbb;
+#[path="bots/mod.rs"]
+pub mod bots;
 
 use std::sync::Mutex;
 
@@ -38,6 +40,7 @@ pub async fn init(app: AppHandle) -> std::io::Result<()> {
             .service(handlers::twitch::create_db)
             .service(handlers::twitch::read)
             .service(handlers::twitch::create)
+            .service(handlers::twitch::response)
     })
     .bind(("127.0.0.1", 5000))?
     .run()

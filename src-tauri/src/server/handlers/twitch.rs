@@ -6,9 +6,15 @@ use serde_json::to_string;
 use crate::server::models;
 use crate::server::ddbb;
 
- #[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct TwitchReadRequest {
     table: String
+}
+
+#[derive(Deserialize, Debug)]
+struct TokenResponse {
+    code: String,
+    scope: String,
 }
 
 const MAX_SIZE: usize = 262_144; // Payload max size 256k
@@ -24,6 +30,15 @@ pub async fn create_db() -> Result<HttpResponse, Error> {
     });
     Ok(HttpResponse::Ok().json(obj))
 }
+
+
+#[get("/auth/token/response")]
+pub async fn response(response: web::Query<TokenResponse>) -> Result<HttpResponse, Error> {
+    println!("El token es: {}", response.code);
+    println!("El scope es: {}", response.scope);
+    Ok(HttpResponse::Ok().json(""))
+}
+
 #[post("/api/twitch/read")]
 pub async fn read(mut payload: web::Payload) -> Result<HttpResponse, Error> {
     let mut body = web::BytesMut::new();
