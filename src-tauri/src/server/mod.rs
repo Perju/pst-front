@@ -27,6 +27,7 @@ pub async fn init(app: AppHandle) -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:4200")
+            .allowed_origin("tauri://localhost")
             .allowed_origin("http://127.0.0.1:4200")
             .allowed_methods(vec!["GET", "POST", "OPTIONS"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
