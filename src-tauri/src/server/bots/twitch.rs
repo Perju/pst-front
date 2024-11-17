@@ -13,6 +13,9 @@ use tokio_js_set_interval::set_interval_async;
 use twitch_api::twitch_oauth2::{ AccessToken, AppAccessToken, TwitchToken, UserToken};
 use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 
+use crate::server::models;
+use crate::server::ddbb;
+
 #[derive(Clone)]
 pub struct TwitchBotApp {
     client: TwitchClient<'static, reqwest::Client>,
@@ -137,11 +140,17 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'sta
         Ok(_) => {"Mensaje enviado correctamente"},
         Err(_) => {"Error al enviar el mensaje"},
     };
-    twitch_bot.connect_to_chat().await;
-    twitch_bot.send_chat_message("Hola, ya funciono!").await;
-    set_timer(twitch_bot.clone(), "Hola mundo!".to_string(), 5000);
-    // twitch_bot.clone().read_chat(reader);
 
+    // Conectar al chat
+    twitch_bot.connect_to_chat().await;
+
+    // cargart fraes temporizadas
+    let timers = ddbb::twitch::read_timers().unwrap();
+    for timer in timers.iter() {
+        set_timer(twitch_bot.clone(), timer.message.to_string(), (timer.period * 1000) as u64);
+    }
+
+    // leer mensajes del chat
     twitch_bot.read_chat().await;
     tokio::signal::ctrl_c().await.unwrap();
     Ok(())
