@@ -1,10 +1,9 @@
 use std::error::Error;
-use std::io::BufRead;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use dotenv::dotenv;
 
-use tokio::net::TcpStream;
+use tokio::net::{TcpStream, tcp::OwnedReadHalf, tcp::OwnedWriteHalf};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::io::Lines;
 
@@ -21,7 +20,8 @@ pub struct TwitchBotApp {
     chat_token: UserToken,
     chat_username: String,
     chat_channel_id: String,
-    chat_stream: Arc<Mutex<TcpStream>>,
+    chat_reader: Arc<Mutex<OwnedReadHalf>>,
+    chat_writer: Arc<Mutex<OwnedWriteHalf>>,
 }
 
 impl TwitchBotApp {
@@ -45,6 +45,7 @@ impl TwitchBotApp {
 
         // Conectar al servidor IRC de Twitch
         let chat_stream = TcpStream::connect("irc.chat.twitch.tv:6667").await.unwrap();
+        let (read, write) = chat_stream.into_split();
 
         TwitchBotApp {
             client,
@@ -52,12 +53,13 @@ impl TwitchBotApp {
             chat_token,
             chat_username,
             chat_channel_id,
-            chat_stream: Arc::new(Mutex::new(chat_stream)),
+            chat_reader: Arc::new(Mutex::new(read)),
+            chat_writer: Arc::new(Mutex::new(write)),
         }
     }
 
     async fn connect_to_chat(&self) -> Result<(), Box<dyn Error>> {
-        let mut chat_stream = self.chat_stream.lock().await;
+        let mut chat_stream = self.chat_writer.lock().await;
 
         // let (read, mut write) = chat_stream.into_split();
 
@@ -70,7 +72,7 @@ impl TwitchBotApp {
     }
 
     pub async fn send_chat_message(&self, message: &str) -> Result<(), Box<dyn Error>>  {
-        let mut chat_stream = self.chat_stream.lock().await;
+        let mut chat_stream = self.chat_writer.lock().await;
 
 
         // Enviar un mensaje al chat
@@ -82,7 +84,7 @@ impl TwitchBotApp {
 
     // Leer las respuestas del servidor (opcional)
     pub async fn read_chat(&self) -> Result<(), Box<dyn Error>>{
-        let mut chat_stream = self.chat_stream.lock().await;
+        let mut chat_stream = self.chat_reader.lock().await;
         let mut reader = tokio::io::BufReader::new(&mut *chat_stream);
 
         let mut line = String::new();
