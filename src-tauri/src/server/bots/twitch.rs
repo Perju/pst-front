@@ -4,8 +4,7 @@ use tokio::sync::Mutex;
 use dotenv::dotenv;
 
 use tokio::net::{TcpStream, tcp::OwnedReadHalf, tcp::OwnedWriteHalf};
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
-use tokio::io::Lines;
+use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 
 use reqwest::Client;
 
@@ -13,7 +12,6 @@ use tokio_js_set_interval::set_interval_async;
 use twitch_api::twitch_oauth2::{ AccessToken, AppAccessToken, TwitchToken, UserToken};
 use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 
-use crate::server::models;
 use crate::server::ddbb;
 
 #[derive(Clone)]
@@ -90,9 +88,27 @@ impl TwitchBotApp {
         let mut chat_stream = self.chat_reader.lock().await;
         let mut reader = tokio::io::BufReader::new(&mut *chat_stream);
 
+        let commands = ddbb::twitch::read_commands().unwrap();
+
         let mut line = String::new();
         while reader.read_line(&mut line).await? > 0{
             println!("Recibido: {}", line);
+            if line.contains("#perju_gatar :") {
+                let (before, after) = line.split_once( "#perju_gatar :").unwrap();
+                let result = commands.iter().find(|c|{
+                    let mut command_name = "!".to_owned();
+                    command_name.push_str(&c.name);
+                    after.starts_with(&command_name)
+                });
+                match result {
+                    Some(command)=> {
+                        self.send_chat_message(&command.response.to_string()).await;
+                        ()
+                    },
+                    None => println!("No hay resultado:"),
+                }
+            }
+
             line.clear();
         }
 
@@ -150,7 +166,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'sta
         set_timer(twitch_bot.clone(), timer.message.to_string(), (timer.period * 1000) as u64);
     }
 
-    // leer mensajes del chat
+    // leer mensajes del chat y contestar comandos
     twitch_bot.read_chat().await;
     tokio::signal::ctrl_c().await.unwrap();
     Ok(())
