@@ -1,4 +1,8 @@
 {
+  "author": "Perju",
+  "private": true,
+  "license": "MIT",
+  "repository": "https://github.com/Perju/pst-front",
   "name": "perju-stream-toolbox",
   "version": "0.9.4",
   "scripts": {

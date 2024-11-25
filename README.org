@@ -28,3 +28,20 @@ entornos básicos =Desarrollo= y =Produccion= se han añadido otros dos entornos
   - ~./src-tauri/Cargo.toml~
   - ~./package.json~
 - Fusionar "=master=" en =release=
+
+* Manual de usuario
+** Instalación
+- Te descargas el instalador o el portable y antes de ejecutarlo rellenas el
+  archivo .env con los siguientes valores.
+  #+begin_src sh
+TKN_CLIENT_ID=token_asd913ijf
+TKN_CLIENT_SECRET=token_afs0d9fko2
+TKN_BOT=token_alskdjf982j
+  #+end_src
+  - Para conseguir los dos primeros tienes que crear una aplicación en la
+    [[https://dev.twitch.tv/console][consola]] de desarrollador de Twitch.
+  - Para el bot que habla en el chat hay que conseguir un token oauth como los
+    de [[https://twitchapps.com/tmi/][este]] generador de tokens y utilizarlo sin el prefijo "oauth:".
+** Uso
+*** OBS
+*** Twitch
