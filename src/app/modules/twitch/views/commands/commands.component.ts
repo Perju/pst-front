@@ -30,18 +30,18 @@ export class CommandsComponent implements OnInit {
 
   ngOnInit(): void {
     this.twitchPstService.getCommands().subscribe({
-      next: (data) => (this.commands = data),
-      error: (err) => console.log(err),
-      complete: () => console.log('getCommands() complete')
+      next: data => (this.commands = JSON.parse(data)),
+      error: err => console.log(err),
+      complete: () => console.log('getCommands() complete'),
     });
   }
 
   public formGroupCommands = new FormGroup({
-    comando: new FormControl('', [Validators.required]),
-    nombre: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     colddown: new FormControl('', [Validators.required, onlyNumbersAllowed]),
-    mensaje: new FormControl('', [Validators.required]),
-    activo: new FormControl(false)
+    message: new FormControl('', [Validators.required]),
+    active: new FormControl(false),
+    usr_lvl: new FormControl(5)
   });
 
   getErrorMessage(controlName: string) {
@@ -57,6 +57,23 @@ export class CommandsComponent implements OnInit {
     if (this.formGroupCommands.invalid) {
       console.log('Formulario invalido');
       return;
+    }
+    const { name, message, colddown, usr_lvl } = this.formGroupCommands.value;
+    if (
+      name !== null &&
+      name !== undefined &&
+      message !== null &&
+      message !== undefined &&
+      colddown !== null &&
+      colddown !== undefined
+    ) {
+      this.twitchPstService.addCommand({
+        name: name,
+        response: message,
+        colddown: Number.parseInt(colddown),
+        active: true,
+        usr_lvl: usr_lvl || 1,
+      });
     }
     console.log('onFormSubmit', this.formGroupCommands.value);
   }

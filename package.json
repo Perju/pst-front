@@ -1,6 +1,10 @@
 {
+  "author": "Perju",
+  "private": true,
+  "license": "MIT",
+  "repository": "https://github.com/Perju/pst-front",
   "name": "perju-stream-toolbox",
-  "version": "0.0.0",
+  "version": "0.9.4",
   "scripts": {
     "ng": "ng",
     "start": "npm run tauri:serve",
@@ -43,7 +47,7 @@
     "@angular-devkit/build-angular": "^15.2.4",
     "@angular/cli": "~15.2.4",
     "@angular/compiler-cli": "^15.2.0",
-    "@tauri-apps/cli": "^1.5.11",
+    "@tauri-apps/cli": "^2.0.4",
     "@types/debug": "^4.1.7",
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
