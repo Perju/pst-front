@@ -9,9 +9,10 @@ import { Source } from '../../models/source.model';
 import { CommonService } from '../../services/common.service';
 
 @Component({
-  selector: 'obs-controller',
-  templateUrl: './controller.component.html',
-  styleUrls: ['./controller.component.scss']
+    selector: 'obs-controller',
+    templateUrl: './controller.component.html',
+    styleUrls: ['./controller.component.scss'],
+    standalone: false
 })
 export class ControllerComponent implements OnInit {
   public scenes: Scene[] = [];
