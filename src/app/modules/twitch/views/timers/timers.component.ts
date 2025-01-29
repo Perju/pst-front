@@ -17,9 +17,10 @@ function onlyNumbersAllowed(control: AbstractControl) {
 }
 
 @Component({
-  selector: 'twitch-timers',
-  templateUrl: './timers.component.html',
-  styleUrls: ['./timers.component.scss']
+    selector: 'twitch-timers',
+    templateUrl: './timers.component.html',
+    styleUrls: ['./timers.component.scss'],
+    standalone: false
 })
 export class TimersComponent implements OnInit {
   public timers: TwitchTimer[] = [];
