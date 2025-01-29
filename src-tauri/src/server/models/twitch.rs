@@ -25,6 +25,12 @@ pub struct AppToken {
     pub client_secret: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Token {
+    pub name: String,
+    pub value: String,
+}
+
 impl Command {
     pub fn new(id: i32, name: &str, response: &str, active: bool, usr_lvl: i32) -> Self {
         Command {
