@@ -63,24 +63,24 @@ jobs:
           prerelease: false
           args: ${{ matrix.settings.args }}
 
-  # publish-release:
-  #   permissions:
-  #     contents: write
-  #   runs-on: ubuntu-latest
-  #   needs: [publish-tauri]
-
-  #   steps:
-  #     - name: publish release
-  #       id: publish-release
-  #       uses: actions/github-script@v6
-  #       env:
-  #         release_id: ${{github.ref_name}}
-  #       with:
-  #         script: |
-  #           github.rest.repos.updateRelease({
-  #             owner: context.repo.owner,
-  #             repo: context.repo.repo,
-  #             release_id: process.env.release_id,
-  #             draft: false,
-  #             prerelease: false
-  #           })
+  publish-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: [publish-tauri]
+    
+    steps:
+      - name: publish release
+        id: publish-release
+        uses: actions/github-script@v6
+        env:
+          release_id: ${{github.ref_name}}
+        with:
+          script: |
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.release_id,
+              draft: false,
+              prerelease: false
+            })

@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CONSTANTS } from '../twitch-constants';
-import { TwitchCommand, TwitchTimer } from '../models/twitch.models';
+import {
+  TwitchCommand,
+  TwitchTimer,
+  TwitchToken,
+} from '../models/twitch.models';
 
 @Injectable({ providedIn: 'root' })
 export class TwitchPstService {
   constructor(private http: HttpClient) {}
+  // Create DB
+  createDB() {
+    return this.http.get<any>(CONSTANTS.TWITCH_DB_CREATE);
+  }
+  createTokensDB() {
+    return this.http.get<any>(CONSTANTS.TWITCH_DB_TOKENS_CREATE);
+  }
 
+  // Commands
   getCommands() {
     const body = { table: CONSTANTS.TWITCH_COMMANDS };
-    return this.http.post<any>(CONSTANTS.TWITCH_READ_URL, body);
-  }
-  getTimers() {
-    const body = { table: CONSTANTS.TWITCH_TIMERS };
     return this.http.post<any>(CONSTANTS.TWITCH_READ_URL, body);
   }
   addCommand(command: TwitchCommand) {
@@ -22,10 +30,16 @@ export class TwitchPstService {
     data.id = -1;
     const body = { table: CONSTANTS.TWITCH_COMMANDS, data: data };
     return this.http.post<any>(CONSTANTS.TWITCH_CREATE_URL, body).subscribe({
-      next: (data) => {
+      next: data => {
         console.log(data);
-      }
+      },
     });
+  }
+
+  // Timers
+  getTimers() {
+    const body = { table: CONSTANTS.TWITCH_TIMERS };
+    return this.http.post<any>(CONSTANTS.TWITCH_READ_URL, body);
   }
   addTimer(timer: TwitchTimer) {
     const data: any = { ...timer };
@@ -33,9 +47,19 @@ export class TwitchPstService {
     data.id = -1;
     const body = { table: CONSTANTS.TWITCH_TIMERS, data: data };
     return this.http.post<any>(CONSTANTS.TWITCH_CREATE_URL, body).subscribe({
-      next: (data) => {
-        console.log(data);
-      }
+      next: data => console.log(data),
+    });
+  }
+
+  // Tokens
+  getToken(token_name: string) {
+    const body = { tkn_name: token_name };
+    return this.http.post<any>(CONSTANTS.TWITCH_READ_TOKEN, body);
+  }
+  addToken(token: TwitchToken) {
+    const body = { tkn_name: token.name, value: token.value };
+    return this.http.post<any>(CONSTANTS.TWITCH_CREATE_TOKEN, body).subscribe({
+      next: data => console.log(data),
     });
   }
 }

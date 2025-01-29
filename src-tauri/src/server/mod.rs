@@ -39,9 +39,12 @@ pub async fn init(app: AppHandle) -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .wrap(cors)
             .service(handlers::twitch::create_db)
+            .service(handlers::twitch::create_tokens_db)
             .service(handlers::twitch::read)
             .service(handlers::twitch::create)
             .service(handlers::twitch::response)
+            .service(handlers::twitch::create_token)
+            .service(handlers::twitch::read_token)
     })
     .bind(("127.0.0.1", 5000))?
     .run()

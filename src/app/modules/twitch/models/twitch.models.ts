@@ -41,3 +41,8 @@ export enum UserLevel {
   MOD = 4,
   STREAMER = 5,
 }
+
+export interface TwitchToken {
+  name: string;
+  value: string;
+}
