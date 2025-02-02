@@ -124,6 +124,18 @@ pub fn add_token(token: &models::twitch::Token) -> Result<()>{
     }
 }
 
+pub fn update_token(token: &models::twitch::Token) -> Result<()>{
+    let conn = Connection::open("twitch_tokens.db")?;
+
+    match conn.execute(
+        "UPDATE tokens SET value = (?1) WHERE name = (?2)",
+        (&token.value, &token.name)
+    ){
+        Ok(_) => Ok(()),
+        Err(err) => Err(err),
+    }
+}
+
 pub fn read_token(name: String) -> Result<models::twitch::Token> {
     let conn = Connection::open("twitch_tokens.db")?;
     let stmt = "SELECT name, value FROM tokens WHERE name = ?1";
@@ -133,10 +145,9 @@ pub fn read_token(name: String) -> Result<models::twitch::Token> {
         params![name],
         |row| {
             Ok(models::twitch::Token {
-                name: row.get(1)?,
-                value: row.get(2)?,
-            }
-            )
+                name: row.get(0)?,
+                value: row.get(1)?,
+            })
         }
     )?;
 

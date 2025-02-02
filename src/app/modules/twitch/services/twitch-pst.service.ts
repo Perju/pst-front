@@ -53,13 +53,13 @@ export class TwitchPstService {
 
   // Tokens
   getToken(token_name: string) {
-    const body = { tkn_name: token_name };
+    const body = { name: token_name };
     return this.http.post<any>(CONSTANTS.TWITCH_READ_TOKEN, body);
   }
   addToken(token: TwitchToken) {
-    const body = { tkn_name: token.name, value: token.value };
+    const body = { name: token.name, value: token.value };
     return this.http.post<any>(CONSTANTS.TWITCH_CREATE_TOKEN, body).subscribe({
-      next: data => console.log(data),
+      next: data => console.log('next addToken', data),
     });
   }
 }

@@ -20,7 +20,7 @@ struct TokenResponse {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TwitchTokenRequest {
-    tkn_name: String
+    name: String
 }
 
 const MAX_SIZE: usize = 262_144; // Payload max size 256k
@@ -113,7 +113,19 @@ pub async fn response(response: web::Query<TokenResponse>) -> Result<HttpRespons
 }
 
 #[post("/api/twitch/token/create")]
-pub async fn create_token(mut payload: web::Payload) -> actix_web::Result<HttpResponse, Error>{
+pub async fn create_token(payload: web::Payload) -> actix_web::Result<HttpResponse, Error>{
+    let body: BytesMut = extract_payload(payload).await?;
+    let obj = serde_json::from_slice::<serde_json::Value>(&body)?;
+    let json_string = serde_json::to_string_pretty(&obj)?;
+    let token: &models::twitch::Token = &serde_json::from_str(json_string.as_str()).unwrap();
+    match ddbb::twitch::read_token(token.name.clone()) {
+        Ok(v) => {
+            ddbb::twitch::update_token(token).unwrap();
+            println!("Que es esto {:?}", v);
+        },
+        Err(e) => ddbb::twitch::add_token(token).unwrap(),
+    };
+
     Ok(HttpResponse::Ok().json(""))
 }
 
@@ -121,8 +133,8 @@ pub async fn create_token(mut payload: web::Payload) -> actix_web::Result<HttpRe
 pub async fn read_token(payload: web::Payload) -> Result<HttpResponse, Error> {
     let body: BytesMut = extract_payload(payload).await?;
     let obj = serde_json::from_slice::<TwitchTokenRequest>(&body)?;
-    println!("El token pedido es {}", obj.tkn_name);
-    let token = ddbb::twitch::read_token(obj.tkn_name).unwrap();
+    println!("El token pedido es {}", obj.name);
+    let token = ddbb::twitch::read_token(obj.name).unwrap();
     let data_json = to_string(&token).unwrap();
 
     Ok(HttpResponse::Ok().json(data_json))

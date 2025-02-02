@@ -17,14 +17,14 @@ import { HttpClientModule } from '@angular/common/http';
     TimersComponent,
     TwitchLoginComponent,
     CommandsComponent,
-    TwitchLeftSideBarComponent
+    TwitchLeftSideBarComponent,
   ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
     MaterialUiModule,
-    TwitchRoutingModule
+    TwitchRoutingModule,
   ],
   exports: [
     TwitchHelpComponent,
@@ -32,8 +32,8 @@ import { HttpClientModule } from '@angular/common/http';
     TwitchLoginComponent,
     CommandsComponent,
     TwitchLeftSideBarComponent,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [HttpClientModule]
+  providers: [HttpClientModule],
 })
 export class TwitchModule {}
