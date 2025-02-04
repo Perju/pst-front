@@ -8,21 +8,21 @@
       <p>
         <mat-form-field>
           <mat-label>App Token:</mat-label>
-          <input matInput type="text" name="appToken" placeholder="appToken" [(ngModel)]="appToken" />
+          <input matInput type="password" name="appToken" placeholder="appToken" [(ngModel)]="appToken" />
         </mat-form-field>
         <button mat-raised-button color="accent" (click)="addAppToken(appToken)">Add app token</button>
       </p>
       <p>
         <mat-form-field>
           <mat-label>App Secret:</mat-label>
-          <input matInput placeholder="appSecret" [(ngModel)]="appSecret" />
+          <input matInput type="password" name="appSecret" placeholder="appSecret" [(ngModel)]="appSecret" />
         </mat-form-field>
         <button mat-raised-button color="accent" (click)="addAppSecret(appSecret)">Add app secret</button>
       </p>
       <p>
         <mat-form-field>
           <mat-label>Chat Token</mat-label>
-          <input matInput placeholder="chatToken" [(ngModel)]="chatToken" />
+          <input matInput type="password" name="chatToken" placeholder="chatToken" [(ngModel)]="chatToken" />
         </mat-form-field>
         <button mat-raised-button color="accent" (click)="addChatToken(chatToken)">Add chat token</button>
 

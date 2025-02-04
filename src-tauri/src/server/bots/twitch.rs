@@ -28,9 +28,12 @@ pub struct TwitchBotApp {
 impl TwitchBotApp {
     async fn new() -> Self {
         dotenv().ok();
-        let tkn_client_id = std::env::var("TKN_CLIENT_ID").unwrap();
-        let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET").unwrap();
-        let tkn_bot = std::env::var("TKN_BOT").unwrap();
+        let tkn_client_id = std::env::var("TKN_CLIENT_ID")
+            .unwrap_or_else(|_| ddbb::twitch::read_token("appToken".to_string()).unwrap().value);
+        let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET")
+            .unwrap_or_else(|_| ddbb::twitch::read_token("appSecret".to_string()).unwrap().value);
+        let tkn_bot = std::env::var("TKN_BOT")
+            .unwrap_or_else(|_| ddbb::twitch::read_token("appChatToken".to_string()).unwrap().value);
         let client = TwitchClient::default();
         let http_client = Client::new();
         let app_token =AppAccessToken::get_app_access_token(
