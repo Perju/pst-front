@@ -19,9 +19,10 @@ function onlyNumbersAllowed(control: AbstractControl) {
 }
 
 @Component({
-  selector: 'twitch-commands',
-  templateUrl: './commands.component.html',
-  styleUrls: ['./commands.component.scss']
+    selector: 'twitch-commands',
+    templateUrl: './commands.component.html',
+    styleUrls: ['./commands.component.scss'],
+    standalone: false
 })
 export class CommandsComponent implements OnInit {
   public commands: TwitchCommand[] = [];

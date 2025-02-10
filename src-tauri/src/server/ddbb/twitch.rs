@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Result};
+use rusqlite::{Connection, Result, params};
 
 use crate::server::models;
 
@@ -25,6 +25,20 @@ pub fn create_tables() -> Result<()> {
          )",
         []
     )?;
+
+    Ok(())
+}
+
+pub fn create_table_tokens() -> Result<()> {
+    let conn_tkn = Connection::open("twitch_tokens.db")?;
+    conn_tkn.execute(
+        "create table if not exists tokens (
+             name text primary key,
+             value text not null
+         )",
+        []
+    )?;
+
     Ok(())
 }
 
@@ -96,4 +110,46 @@ pub fn read_timers() -> Result<Vec<models::twitch::Timer>> {
     }
     // devolvemos el vector
     Ok(v)
+}
+
+pub fn add_token(token: &models::twitch::Token) -> Result<()>{
+    let conn = Connection::open("twitch_tokens.db")?;
+
+    match conn.execute(
+        "INSERT INTO tokens (name, value) VALUES (?1, ?2)",
+        (&token.name, &token.value)
+    ){
+        Ok(_) => Ok(()),
+        Err(err) => Err(err),
+    }
+}
+
+pub fn update_token(token: &models::twitch::Token) -> Result<()>{
+    let conn = Connection::open("twitch_tokens.db")?;
+
+    match conn.execute(
+        "UPDATE tokens SET value = (?1) WHERE name = (?2)",
+        (&token.value, &token.name)
+    ){
+        Ok(_) => Ok(()),
+        Err(err) => Err(err),
+    }
+}
+
+pub fn read_token(name: String) -> Result<models::twitch::Token> {
+    let conn = Connection::open("twitch_tokens.db")?;
+    let stmt = "SELECT name, value FROM tokens WHERE name = ?1";
+
+    let token = conn.query_row(
+        stmt,
+        params![name],
+        |row| {
+            Ok(models::twitch::Token {
+                name: row.get(0)?,
+                value: row.get(1)?,
+            })
+        }
+    )?;
+
+    Ok(token)
 }
