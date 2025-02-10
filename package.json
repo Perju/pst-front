@@ -37,7 +37,7 @@
     "@angular/router": "^19.0.4",
     "angular-cli-ghpages": "^1.0.5",
     "g": "^2.0.1",
-    "obs-websocket-js": "^5.0.2",
+    "obs-websocket-js": "^5.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
