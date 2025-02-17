@@ -32,7 +32,7 @@ impl TwitchBotApp {
             .unwrap_or_else(|_| ddbb::twitch::read_token("appToken".to_string()).unwrap().value);
         let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET")
             .unwrap_or_else(|_| ddbb::twitch::read_token("appSecret".to_string()).unwrap().value);
-        let tkn_bot = std::env::var("TKN_BOT")
+        let tkn_bot= std::env::var("TKN_BOT")
             .unwrap_or_else(|_| ddbb::twitch::read_token("appChatToken".to_string()).unwrap().value);
         let client = TwitchClient::default();
         let http_client = Client::new();
@@ -45,7 +45,8 @@ impl TwitchBotApp {
         let access_token  = AccessToken::new(tkn_bot.to_string());
         let chat_token = UserToken::from_token(&http_client, access_token).await.unwrap();
         let chat_username = "perju_gatar".to_string();
-        let chat_channel_id = "perju_gatar".to_string();
+        let chat_channel_id = std::env::var("CHAT_CHANNEL")
+            .unwrap_or_else(|_| ddbb::twitch::read_token("chatChannel".to_string()).unwrap().value);
 
         // Conectar al servidor IRC de Twitch
         let chat_stream = TcpStream::connect("irc.chat.twitch.tv:6667").await.unwrap();

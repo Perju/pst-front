@@ -9,28 +9,25 @@ import { TwitchPstService } from '../../services/twitch-pst.service';
   standalone: false,
 })
 export class TwitchLoginComponent implements OnInit {
-  appToken = 'appToken';
-  appSecret = 'appSecret';
-  chatToken = 'chatToken';
+  botConfig: any = {
+    appToken: 'appToken',
+    appSecret: 'appSecret',
+    appChatToken: 'appChatToken',
+    chatChannel: "chatChannel"
+  }
 
   constructor(private twitchPstService: TwitchPstService) {}
 
   ngOnInit() {
-    this.read_token('appToken').subscribe({
-      next: data => (this.appToken = JSON.parse(data).value),
-      error: err => console.log(err),
-      complete: () => console.log('appToken recivido'),
-    });
-    this.read_token('appSecret').subscribe({
-      next: data => (this.appSecret = JSON.parse(data).value),
-      error: err => console.log(err),
-      complete: () => console.log('appSecret recivido'),
-    });
-    this.read_token('appChatToken').subscribe({
-      next: data => (this.chatToken = JSON.parse(data).value),
-      error: err => console.log(err),
-      complete: () => console.log('chatToken recivido'),
-    });
+    let tokens = ["appToken", "appSecret", "appChatToken", "chatChannel"];
+    tokens.forEach(t => {
+      this.read_token(t).subscribe({
+        next: data => (this.botConfig[t] = JSON.parse(data).value),
+        error: err => console.log(err),
+        complete: () => console.log('appToken recivido'),
+      })
+    })
+    console.log(this.botConfig);
   }
 
   read_token(token: string) {
@@ -49,6 +46,10 @@ export class TwitchLoginComponent implements OnInit {
   addChatToken(token: string) {
     this.add_token('appChatToken', token);
   }
+  addChatChannel(token: string) {
+    this.add_token('chatChannel', token);
+  }
+
   createTwitchTokensDB() {
     this.twitchPstService.createTokensDB().subscribe({
       next: data => console.log(data),

@@ -8,24 +8,30 @@
       <p>
         <mat-form-field>
           <mat-label>App Token:</mat-label>
-          <input matInput type="password" name="appToken" placeholder="appToken" [(ngModel)]="appToken" />
+          <input matInput type="password" name="appToken" placeholder="appToken" [(ngModel)]="botConfig.appToken" />
         </mat-form-field>
-        <button mat-raised-button color="accent" (click)="addAppToken(appToken)">Add app token</button>
+        <button mat-raised-button color="accent" (click)="addAppToken(botConfig.appToken)">Add app token</button>
       </p>
       <p>
         <mat-form-field>
           <mat-label>App Secret:</mat-label>
-          <input matInput type="password" name="appSecret" placeholder="appSecret" [(ngModel)]="appSecret" />
+          <input matInput type="password" name="appSecret" placeholder="appSecret" [(ngModel)]="botConfig.appSecret" />
         </mat-form-field>
-        <button mat-raised-button color="accent" (click)="addAppSecret(appSecret)">Add app secret</button>
+        <button mat-raised-button color="accent" (click)="addAppSecret(botConfig.appSecret)">Add app secret</button>
       </p>
       <p>
         <mat-form-field>
           <mat-label>Chat Token</mat-label>
-          <input matInput type="password" name="chatToken" placeholder="chatToken" [(ngModel)]="chatToken" />
+          <input matInput type="password" name="chatToken" placeholder="chatToken" [(ngModel)]="botConfig.appChatToken" />
         </mat-form-field>
-        <button mat-raised-button color="accent" (click)="addChatToken(chatToken)">Add chat token</button>
-
+        <button mat-raised-button color="accent" (click)="addChatToken(botConfig.appChatToken)">Add chat token</button>
+      </p>
+      <p>
+        <mat-form-field>
+          <mat-label>Chat Token</mat-label>
+          <input matInput type="text" name="chatChannel" placeholder="chatChannel" [(ngModel)]="botConfig.chatChannel" />
+        </mat-form-field>
+        <button mat-raised-button color="accent" (click)="addChatChannel(botConfig.chatChannel)">Add chat channel</button>
       </p>
       <p>
         Crear base de datos para los tokens
