@@ -15,15 +15,18 @@ use tauri::AppHandle;
 
 struct TauriAppState {
     app: Mutex<AppHandle>,
+    twitch_bot: Mutex<bots::twitch::TwitchBotApp>,
 }
 
 #[actix_web::main]
 pub async fn init(app: AppHandle) -> std::io::Result<()> {
     let tauri_app = web::Data::new(TauriAppState {
         app: Mutex::new(app),
+        twitch_bot: Mutex::new(bots::twitch::TwitchBotApp::new().await),
     });
 
-
+    tokio::spawn(bots::twitch::main(tauri_app.twitch_bot.lock().unwrap().clone()));
+    
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:4200")
