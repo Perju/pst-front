@@ -26,13 +26,13 @@ pub struct TwitchBotApp {
 }
 
 impl TwitchBotApp {
-    async fn new() -> Self {
+    pub async fn new() -> Self {
         dotenv().ok();
         let tkn_client_id = std::env::var("TKN_CLIENT_ID")
             .unwrap_or_else(|_| ddbb::twitch::read_token("appToken".to_string()).unwrap().value);
         let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET")
             .unwrap_or_else(|_| ddbb::twitch::read_token("appSecret".to_string()).unwrap().value);
-        let tkn_bot = std::env::var("TKN_BOT")
+        let tkn_bot= std::env::var("TKN_BOT")
             .unwrap_or_else(|_| ddbb::twitch::read_token("appChatToken".to_string()).unwrap().value);
         let client = TwitchClient::default();
         let http_client = Client::new();
@@ -45,7 +45,8 @@ impl TwitchBotApp {
         let access_token  = AccessToken::new(tkn_bot.to_string());
         let chat_token = UserToken::from_token(&http_client, access_token).await.unwrap();
         let chat_username = "perju_gatar".to_string();
-        let chat_channel_id = "perju_gatar".to_string();
+        let chat_channel_id = std::env::var("CHAT_CHANNEL")
+            .unwrap_or_else(|_| ddbb::twitch::read_token("chatChannel".to_string()).unwrap().value);
 
         // Conectar al servidor IRC de Twitch
         let chat_stream = TcpStream::connect("irc.chat.twitch.tv:6667").await.unwrap();
@@ -62,7 +63,7 @@ impl TwitchBotApp {
         }
     }
 
-    async fn connect_to_chat(&self) -> Result<(), Box<dyn Error>> {
+    pub async fn connect_to_chat(&self) -> Result<(), Box<dyn Error>> {
         let mut chat_stream = self.chat_writer.lock().await;
 
         // let (read, mut write) = chat_stream.into_split();
@@ -138,7 +139,7 @@ impl TwitchBotApp {
     }
 }
 
-fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
+pub fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
     let timer_id = set_interval_async!({
         let bot_clon = bot.clone();
         let msg_clon = msg.clone();
@@ -151,9 +152,7 @@ fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
     timer_id
 }
 
-#[tokio::main]
-pub async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
-    let twitch_bot: TwitchBotApp = TwitchBotApp::new().await;
+pub async fn main(twitch_bot: TwitchBotApp) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let channel_info = twitch_bot.get_channel_info().await;
     match channel_info {
         Ok(_) => {"Mensaje enviado correctamente"},
