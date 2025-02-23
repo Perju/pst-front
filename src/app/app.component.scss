@@ -1,13 +1,32 @@
+mat-grid-tile-header {
+  display:inline-block;
+  width: 100%;
+  min-height: 16vh;
+}
+mat-grid-tile-header mat-toolbar-row:first-child {
+  height: 11vh;
+}
+mat-drawer-container {min-height: 76vh;}
+mat-grid-tile-footer {
+  display:inline-block;
+  width: 100%;
+  height: fit-content;
+}
+mat-grid-tile-footer .mat-toolbar.mat-primary {
+  height: 8vh;
+}
+
 .mat-toolbar>.mat-toolbar-row:first-child {
-  height: 4em;
+  height: 5.1em;
 }
 
 mat-toolbar-row .title {
-  font-size: 4em;
+  font-size: 3em;
 }
 
-mat-drawer-content {
-  min-height: 75vh;
+mat-toolbar-row .md-primary { 
+  font-size: 2em;
+  font-weight: bold;
 }
 
 /* Estilos del menu de navegacion superior */
@@ -54,4 +73,6 @@ mat-drawer-content {
 
 .main-content {
   padding: 1em;
+  width: 75%;
+  left:15em;
 }

@@ -24,7 +24,8 @@ mat-card {
   }
   mat-card-header,
   mat-card-content {
-    padding-bottom: 0.5em mat-card-header {
+    padding-bottom: 0.5em;
+    mat-card-header {
       align-items: center;
       height: 2em;
     }
@@ -39,16 +40,47 @@ mat-card {
   .mensaje-input {
     width: 100%;
   }
-  .mensaje-input:focus {
-    width: 100%;
-    height: 18em;
-  }
 
   .example-full-width {
     width: 100%;
   }
 }
-
+/* Estilos para las lista de temporizadores */
+.timers-list.timers {
+  mat-card-header {
+    align-items: center;
+    height: 2em;
+  }
+  mat-card-title {
+    font-size: 2em;
+  }
+  mat-card-content {
+    flex-flow: column;
+   mat-label{
+     display: inline-block;
+       width: 5.5em;
+     
+   }
+  }
+  .float-right {
+   position: relative;
+   width: 50px;
+   margin-right: 10px;
+   mat-label {
+     width: fit-content;
+   }
+   mat-icon {
+    position: absolute;
+   }
+  }
+  .title-left {
+    width: fit-content;
+  }
+  .title-right {
+    width: 100%;
+  
+  }
+}
 .iconGreen {
   color: green;
 }
