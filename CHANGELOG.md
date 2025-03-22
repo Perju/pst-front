@@ -2,6 +2,13 @@
 
 Todos los cambios importantes para este proyecto iran siendo documentados en este archivo.
 
+## [0.9.6](https://github.com/Perju/pst-front/releases/tag/PST-v0.9.6) 
+
+- Se puede personalizar el canal del chat al que se unira el bot.
+- Se puede acceder al estado del bot desde el servidor web.
+- Mejoras visuales de la interfaz.
+
+
 ## [0.9.5](https://github.com/Perju/pst-front/releases/tag/PST-v0.9.5) (2025-02-10)
 
 - Se configuran los tokens del bot desde la interfaz de la aplicación.
