@@ -70,6 +70,21 @@ jobs:
     needs: [publish-tauri]
     
     steps:
+      - name: Get release ID
+        id: get-release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const release = releases.find(r => r.tag_name === context.ref.replace('refs/tags/', ''));
+            if(!release){
+              throw new Error(`Release not found for tag: ${context.ref}`);
+            }
+            core.setOutput("release_id", release.id);
+
       - name: publish release
         id: publish-release
         uses: actions/github-script@v6
@@ -80,7 +95,7 @@ jobs:
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: process.env.release_id,
+              release_id: ${{ steps.get-release.outputs.release_id }},
               draft: false,
               prerelease: false
-            })
+            });
