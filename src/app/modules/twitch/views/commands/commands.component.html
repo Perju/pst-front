@@ -82,7 +82,8 @@
       <table class="example-full-width" cellspacing="0">
         <tr>
           <td>
-            <mat-card-title>Comando</mat-card-title>
+            <mat-label class="title">Comando !</mat-label>
+            <span>{{ command.name }}</span>
           </td>
         </tr>
       </table>
@@ -91,19 +92,15 @@
       <table class="example-full-width plain" cellspacing="0">
         <tr>
           <td>
-            <div class="col">
-              <mat-label>Nombre</mat-label>
-              <span>{{ command.name }}</span>
-            </div>
+            <mat-label>Mensaje</mat-label>&nbsp;
+            <span>{{ command.response }}</span>
           </td>
-          <td class="col">
-            <div class="col">
-              <mat-label>Nivel de usuario</mat-label>
-              <span>{{ getUserLevel(command.usr_lvl) }}</span>
-            </div>
+          <td>
+            <mat-label>Nivel de usuario</mat-label>&nbsp;
+            <span>{{ getUserLevel(command.usr_lvl) }}</span>
           </td>
-          <td class="">
-            <div class="float-right col">
+          <td>
+            <div class="float-right">
               <mat-label>Activo</mat-label>
               <mat-icon
                 [fontIcon]="getActiveIcon(command.active)"
@@ -112,14 +109,6 @@
                   iconRed: !command.active
                 }"
               ></mat-icon>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="6 col">
-            <div class="col">
-              <mat-label>Mensaje</mat-label>
-              <span>{{ command.response }}</span>
             </div>
           </td>
         </tr>

@@ -1,18 +1,25 @@
 <mat-grid-tile-header>
   <mat-toolbar color="primary">
-    <mat-toolbar-row>Perju StreamToolBox</mat-toolbar-row>
+    <mat-toolbar-row>
+      <span class="title">
+        Perju StreamToolBox
+      </span>
+    </mat-toolbar-row>
+
     <mat-toolbar-row class="top-side-nav">
       <button mat-button class="md-primary" (click)="navigateTo('/obs')">OBS</button>
       <button mat-button class="md-primary" (click)="navigateTo('/twitch')">Twitch</button>
     </mat-toolbar-row>
   </mat-toolbar>
 </mat-grid-tile-header>
+
 <mat-drawer-container>
   <mat-drawer mode="side" opened class="left-sidebar">
     <obs-left-side-bar *ngIf="router.isActive('/obs', false)" routerLinkActive="current-position"></obs-left-side-bar>
     <twitch-left-side-bar *ngIf="router.isActive('/twitch', false)"
       routerLinkActive="current-position"></twitch-left-side-bar>
   </mat-drawer>
+
   <mat-drawer #drawer mode="side" position="end" [opened]="isOpened" class="right-sidebar">
     <div class="float-center">
       <button mat-raised-button color="accent" type="button" (click)="closeProperties()">
@@ -23,11 +30,13 @@
     <!-- TODO cambiar a router outlet con nombre -->
     <obs-right-side-bar *ngIf="router.isActive('/obs', false)"></obs-right-side-bar>
   </mat-drawer>
+
   <mat-drawer-content class="main-content">
     <!-- TODO añadir scroll con https://material.angular.io/cdk/scrolling/api -->
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
+
 <mat-grid-tile-footer>
   <mat-toolbar color="primary">
     <h5>©Perju</h5>

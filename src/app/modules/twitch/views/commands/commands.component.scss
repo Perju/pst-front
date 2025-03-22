@@ -7,6 +7,9 @@
   float: right;
   padding: 0 8px 0 0;
 }
+.command-input, .commands-list {
+  margin-bottom: 8px;
+}
 
 .command-input {
   display: flex;
@@ -52,14 +55,23 @@
 .commands-list {
   width: 100%;
   display: flex;
+  padding: 0 8px 8px 0;
   .example-full-width {
     width: 100%;
     tr {
       display: flex;
       justify-content: space-between;
       margin: 4px;
+      height: fit-content;
       td {
-        flex-basis: 1;
+        height: fit-content;
+        width: 30%;
+      }
+      td:nth-child(2) {
+        width: 60%;
+      }
+      td:nth-child(3) {
+        width: 10%;
       }
       .col {
         display: flex;
@@ -67,6 +79,7 @@
       }
     }
   }
+  mat-icon {position: absolute;}
 }
 
 .iconGreen {

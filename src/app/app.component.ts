@@ -3,14 +3,14 @@ import { CommonService } from './modules/obs/services/common.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   public title = 'Perju Stream Toolbox';
-  public isOpened = true;
+  public isOpened = false;
 
   constructor(private commonService: CommonService, public router: Router) {}
 

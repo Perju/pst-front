@@ -1,4 +1,4 @@
-<mat-card class="timers-list">
+<mat-card class="timers-list form">
   <!-- Formulario para añadir un temporizador -->
   <form [formGroup]="formGroupTimers" (ngSubmit)="addTimer()">
     <mat-card-header>
@@ -66,12 +66,15 @@
 
 <!-- Lista de temporizadores -->
 <ng-container *ngFor="let timer of timers">
-  <mat-card class="timers-list">
+  <mat-card class="timers-list timers">
     <mat-card-header>
       <table class="example-full-width" cellspacing="0">
         <tr>
-          <td>
-            <mat-card-title>Comando</mat-card-title>
+          <td class="title-left">
+            <mat-card-title>Comando:&nbsp;</mat-card-title>
+          </td>
+          <td class="title-right">
+            <span>{{ timer.name }}</span>
           </td>
         </tr>
       </table>
@@ -79,19 +82,13 @@
     <mat-card-content>
       <table class="example-full-width plain" cellspacing="0">
         <tr>
-          <td>
-            <div class="col">
-              <mat-label>Nombre</mat-label>
-              <span>{{ timer.name }}</span>
-            </div>
-          </td>
           <td class="col">
             <div class="col">
-              <mat-label>Intervalo de tiempo</mat-label>
+              <mat-label>Intervalo:&nbsp;</mat-label>
               <span>{{ timer.period }}</span>
             </div>
           </td>
-          <td class="">
+          <td class="col">
             <div class="float-right col">
               <mat-label>Activo</mat-label>
               <mat-icon
@@ -107,7 +104,7 @@
         <tr>
           <td colspan="6 col">
             <div class="col">
-              <mat-label>Mensaje</mat-label>
+              <mat-label>Mensaje:&nbsp;</mat-label>
               <span>{{ timer.message }}</span>
             </div>
           </td>
