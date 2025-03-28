@@ -55,8 +55,8 @@ impl MessageTracker {
 #[derive(Clone)]
 pub struct TwitchBotApp {
     client: TwitchClient<'static, reqwest::Client>,
-    app_token: AppAccessToken,
-    chat_token: UserToken,
+    app_token: Result<AppAccessToken, ()>,
+    chat_token: Result<UserToken, ()>,
     chat_username: String,
     chat_channel_id: String,
     chat_reader: Arc<Mutex<OwnedReadHalf>>,
@@ -67,25 +67,33 @@ pub struct TwitchBotApp {
 impl TwitchBotApp {
     pub async fn new() -> Self {
         dotenv().ok();
-        let tkn_client_id = std::env::var("TKN_CLIENT_ID")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appToken".to_string()).unwrap().value);
-        let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appSecret".to_string()).unwrap().value);
-        let tkn_bot= std::env::var("TKN_BOT")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appChatToken".to_string()).unwrap().value);
+        let tkn_client_id = get_config_value("TKN_CLIENT_ID", "appToken", "DEFAULT_TOKEN");
+        let tkn_client_secret = get_config_value("TKN_CLIENT_SECRET", "appSecret", "DEFAULT_TOKEN");
+        let tkn_bot= get_config_value("TKN_BOT", "appChatToken", "DEFAULT_TOKEN");
         let client = TwitchClient::default();
         let http_client = Client::new();
-        let app_token =AppAccessToken::get_app_access_token(
+        let app_token: Result<AppAccessToken, ()> = match AppAccessToken::get_app_access_token(
             &client,
             tkn_client_id.into(),
             tkn_client_secret.into(),
             vec![],
-        ).await.unwrap();
+        ).await {
+            Ok(token) => Ok(token),
+            Err(err) => {
+                eprintln!("Error obteniendo el App Access Token: {}", err);
+                Err(())
+            }
+        };
         let access_token  = AccessToken::new(tkn_bot.to_string());
-        let chat_token = UserToken::from_token(&http_client, access_token).await.unwrap();
+        let chat_token: Result<UserToken, ()> = match UserToken::from_token(&http_client, access_token).await {
+            Ok(token) => Ok(token),
+            Err(err) => {
+                eprintln!("Error obteniendo el Chat Access Token: {}", err);
+                Err(())
+            }
+        };
         let chat_username = "perju_gatar".to_string();
-        let chat_channel_id = std::env::var("CHAT_CHANNEL")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("chatChannel".to_string()).unwrap().value);
+        let chat_channel_id = get_config_value("CHAT_CHANNEL", "chatChannel", "DEFAULT_CHANNEL");
 
         // Conectar al servidor IRC de Twitch
         let chat_stream = TcpStream::connect("irc.chat.twitch.tv:6667").await.unwrap();
@@ -108,7 +116,7 @@ impl TwitchBotApp {
 
         // let (read, mut write) = chat_stream.into_split();
 
-        chat_stream.write_all(format!("PASS oauth:{}\r\n", self.chat_token.token().secret()).as_bytes()).await?;
+        chat_stream.write_all(format!("PASS oauth:{}\r\n", self.chat_token.as_ref().unwrap().token().secret()).as_bytes()).await?;
         chat_stream.write_all(format!("NICK {}\r\n", self.chat_username).as_bytes()).await?;
         // Unirse al canal
         chat_stream.write_all(format!("JOIN #{}\r\n", self.chat_channel_id).as_bytes()).await?;
@@ -163,8 +171,9 @@ impl TwitchBotApp {
 
     pub async fn get_channel_info(&self) -> std::io::Result<()> {
         let req = GetChannelInformationRequest::broadcaster_ids(&["37113434"]);
+        let app_token = self.app_token.clone().unwrap();
 
-        let response = self.client.helix.req_get(req, &self.app_token).await;
+        let response = self.client.helix.req_get(req, &app_token).await;
         match response {
             Ok(data) => {
                 if let Some(channel) = data.data.get(0) {
@@ -180,6 +189,24 @@ impl TwitchBotApp {
         Ok(())
     }
 }
+
+fn get_config_value(env_var: &str, db_key: &str, default: &str) -> String {
+    std::env::var(env_var).ok()
+        .or_else(|| {
+            match ddbb::twitch::read_token(db_key.to_string()) {
+                Ok(token) => Some(token.value),
+                Err(err) => {
+                    eprintln!("Error obteniendo '{}' desde la base de datos: {}", db_key, err);
+                    None
+                }
+            }
+        })
+        .unwrap_or_else(|| {
+            eprintln!("No se pudo obtener '{}'. Usando un valor por defecto.", env_var);
+            default.to_string()
+        })
+}
+
 
 pub fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
     let timer_id = set_interval_async!({

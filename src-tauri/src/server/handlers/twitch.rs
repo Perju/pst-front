@@ -64,7 +64,7 @@ pub async fn create_tokens_db() -> Result<HttpResponse, Error> {
 }
 
 #[post("/api/twitch/read")]
-pub async fn read(mut payload: web::Payload) -> Result<HttpResponse, Error> {
+pub async fn read(payload: web::Payload) -> Result<HttpResponse, Error> {
     let body: BytesMut = extract_payload(payload).await?;
     let obj = serde_json::from_slice::<TwitchReadRequest>(&body)?;
     let mut data_json: String = "".to_string();
@@ -83,7 +83,7 @@ pub async fn read(mut payload: web::Payload) -> Result<HttpResponse, Error> {
 }
 
 #[post("/api/twitch/create")]
-pub async fn create(mut payload: web::Payload) -> actix_web::Result<HttpResponse, Error>{
+pub async fn create(payload: web::Payload) -> actix_web::Result<HttpResponse, Error>{
     let body: BytesMut = extract_payload(payload).await?;
     let obj = serde_json::from_slice::<serde_json::Value>(&body)?;
     match obj["table"].as_str().unwrap() {
