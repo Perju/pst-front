@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+use std::time::{Duration, Instant};
 use std::error::Error;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -14,6 +16,42 @@ use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 
 use crate::server::ddbb;
 
+struct MessageTracker {
+    messages: VecDeque<Instant>,
+    time_window: Duration,
+}
+
+impl MessageTracker {
+    fn new(time_window: Duration) -> Self {
+        MessageTracker {
+            messages: VecDeque::new(),
+            time_window,
+        }
+    }
+    
+    fn add_message(&mut self) {
+        let now = Instant::now();
+        self.messages.push_back(now);
+        self.cleanup(now);
+    }
+    
+    fn count_recent(&mut self) -> usize {
+        let now = Instant::now();
+        self.cleanup(now);
+        self.messages.len()
+    }
+    
+    fn cleanup(&mut self, now: Instant) {
+        while let Some(&time) = self.messages.front() {
+            if now.duration_since(time) > self.time_window {
+                self.messages.pop_front();
+            } else {
+                break;
+            }
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct TwitchBotApp {
     client: TwitchClient<'static, reqwest::Client>,
@@ -23,6 +61,7 @@ pub struct TwitchBotApp {
     chat_channel_id: String,
     chat_reader: Arc<Mutex<OwnedReadHalf>>,
     chat_writer: Arc<Mutex<OwnedWriteHalf>>,
+    message_tracker: Arc<Mutex<MessageTracker>>,
 }
 
 impl TwitchBotApp {
@@ -60,6 +99,7 @@ impl TwitchBotApp {
             chat_channel_id,
             chat_reader: Arc::new(Mutex::new(read)),
             chat_writer: Arc::new(Mutex::new(write)),
+            message_tracker: Arc::new(Mutex::new(MessageTracker::new(Duration::from_secs(600)))),
         }
     }
 
@@ -98,6 +138,8 @@ impl TwitchBotApp {
         while reader.read_line(&mut line).await? > 0{
             println!("Recibido: {}", line);
             if line.contains("#perju_gatar :") {
+                let mut tracker = self.message_tracker.lock().await;
+                tracker.add_message();
                 let (before, after) = line.split_once( "#perju_gatar :").unwrap();
                 let result = commands.iter().find(|c|{
                     let mut command_name = "!".to_owned();
@@ -144,8 +186,18 @@ pub fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
         let bot_clon = bot.clone();
         let msg_clon = msg.clone();
         async move {
-            if let Err(e) = bot_clon.send_chat_message(&msg_clon.to_string()).await {
-                println!("Erro al enviar el mensaje {}", e)
+            // Cuenta de los mensajes recibidos en los ultimos X minutos
+            let recent_count = {
+                let mut tracker = bot_clon.message_tracker.lock().await;
+                tracker.count_recent()
+            };
+            
+            // Si se han recibido la cantidad minima se envia el mensaje temporizado
+            println!("Se han recibido {} mensajes en los ultimos 10 minutos", recent_count);
+            if recent_count > 5 {
+                if let Err(e) = bot_clon.send_chat_message(&msg_clon.to_string()).await {
+                    println!("Erro al enviar el mensaje {}", e)
+                }
             }
         }
     }, ms);
