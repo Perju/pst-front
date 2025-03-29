@@ -13,20 +13,20 @@ export class TwitchLoginComponent implements OnInit {
     appToken: 'appToken',
     appSecret: 'appSecret',
     appChatToken: 'appChatToken',
-    chatChannel: "chatChannel"
-  }
+    chatChannel: 'chatChannel',
+  };
 
   constructor(private twitchPstService: TwitchPstService) {}
 
   ngOnInit() {
-    let tokens = ["appToken", "appSecret", "appChatToken", "chatChannel"];
+    const tokens = ['appToken', 'appSecret', 'appChatToken', 'chatChannel'];
     tokens.forEach(t => {
       this.read_token(t).subscribe({
         next: data => (this.botConfig[t] = JSON.parse(data).value),
         error: err => console.log(err),
         complete: () => console.log('appToken recivido'),
-      })
-    })
+      });
+    });
     console.log(this.botConfig);
   }
 
@@ -54,7 +54,15 @@ export class TwitchLoginComponent implements OnInit {
     this.twitchPstService.createTokensDB().subscribe({
       next: data => console.log(data),
       error: err => console.log(err),
-      complete: () => console.log('BBDD Tokens creada'),
+      complete: () => console.log('BBDD Twitch Tokens creada'),
+    });
+  }
+
+  createTwitchDB() {
+    this.twitchPstService.createDB().subscribe({
+      next: data => console.log(data),
+      error: err => console.log(err),
+      complete: () => console.log('BBDD Twitch commands&timers creada'),
     });
   }
 }
