@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+use std::time::{Duration, Instant};
 use std::error::Error;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -14,39 +16,84 @@ use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 
 use crate::server::ddbb;
 
+struct MessageTracker {
+    messages: VecDeque<Instant>,
+    time_window: Duration,
+}
+
+impl MessageTracker {
+    fn new(time_window: Duration) -> Self {
+        MessageTracker {
+            messages: VecDeque::new(),
+            time_window,
+        }
+    }
+    
+    fn add_message(&mut self) {
+        let now = Instant::now();
+        self.messages.push_back(now);
+        self.cleanup(now);
+    }
+    
+    fn count_recent(&mut self) -> usize {
+        let now = Instant::now();
+        self.cleanup(now);
+        self.messages.len()
+    }
+    
+    fn cleanup(&mut self, now: Instant) {
+        while let Some(&time) = self.messages.front() {
+            if now.duration_since(time) > self.time_window {
+                self.messages.pop_front();
+            } else {
+                break;
+            }
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct TwitchBotApp {
     client: TwitchClient<'static, reqwest::Client>,
-    app_token: AppAccessToken,
-    chat_token: UserToken,
+    app_token: Result<AppAccessToken, ()>,
+    chat_token: Result<UserToken, ()>,
     chat_username: String,
     chat_channel_id: String,
     chat_reader: Arc<Mutex<OwnedReadHalf>>,
     chat_writer: Arc<Mutex<OwnedWriteHalf>>,
+    message_tracker: Arc<Mutex<MessageTracker>>,
 }
 
 impl TwitchBotApp {
     pub async fn new() -> Self {
         dotenv().ok();
-        let tkn_client_id = std::env::var("TKN_CLIENT_ID")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appToken".to_string()).unwrap().value);
-        let tkn_client_secret = std::env::var("TKN_CLIENT_SECRET")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appSecret".to_string()).unwrap().value);
-        let tkn_bot= std::env::var("TKN_BOT")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("appChatToken".to_string()).unwrap().value);
+        let tkn_client_id = get_config_value("TKN_CLIENT_ID", "appToken", "DEFAULT_TOKEN");
+        let tkn_client_secret = get_config_value("TKN_CLIENT_SECRET", "appSecret", "DEFAULT_TOKEN");
+        let tkn_bot= get_config_value("TKN_BOT", "appChatToken", "DEFAULT_TOKEN");
         let client = TwitchClient::default();
         let http_client = Client::new();
-        let app_token =AppAccessToken::get_app_access_token(
+        let app_token: Result<AppAccessToken, ()> = match AppAccessToken::get_app_access_token(
             &client,
             tkn_client_id.into(),
             tkn_client_secret.into(),
             vec![],
-        ).await.unwrap();
+        ).await {
+            Ok(token) => Ok(token),
+            Err(err) => {
+                eprintln!("Error obteniendo el App Access Token: {}", err);
+                Err(())
+            }
+        };
         let access_token  = AccessToken::new(tkn_bot.to_string());
-        let chat_token = UserToken::from_token(&http_client, access_token).await.unwrap();
+        let chat_token: Result<UserToken, ()> = match UserToken::from_token(&http_client, access_token).await {
+            Ok(token) => Ok(token),
+            Err(err) => {
+                eprintln!("Error obteniendo el Chat Access Token: {}", err);
+                Err(())
+            }
+        };
         let chat_username = "perju_gatar".to_string();
-        let chat_channel_id = std::env::var("CHAT_CHANNEL")
-            .unwrap_or_else(|_| ddbb::twitch::read_token("chatChannel".to_string()).unwrap().value);
+        let chat_channel_id = get_config_value("CHAT_CHANNEL", "chatChannel", "DEFAULT_CHANNEL");
 
         // Conectar al servidor IRC de Twitch
         let chat_stream = TcpStream::connect("irc.chat.twitch.tv:6667").await.unwrap();
@@ -60,6 +107,7 @@ impl TwitchBotApp {
             chat_channel_id,
             chat_reader: Arc::new(Mutex::new(read)),
             chat_writer: Arc::new(Mutex::new(write)),
+            message_tracker: Arc::new(Mutex::new(MessageTracker::new(Duration::from_secs(600)))),
         }
     }
 
@@ -68,7 +116,7 @@ impl TwitchBotApp {
 
         // let (read, mut write) = chat_stream.into_split();
 
-        chat_stream.write_all(format!("PASS oauth:{}\r\n", self.chat_token.token().secret()).as_bytes()).await?;
+        chat_stream.write_all(format!("PASS oauth:{}\r\n", self.chat_token.as_ref().unwrap().token().secret()).as_bytes()).await?;
         chat_stream.write_all(format!("NICK {}\r\n", self.chat_username).as_bytes()).await?;
         // Unirse al canal
         chat_stream.write_all(format!("JOIN #{}\r\n", self.chat_channel_id).as_bytes()).await?;
@@ -98,6 +146,8 @@ impl TwitchBotApp {
         while reader.read_line(&mut line).await? > 0{
             println!("Recibido: {}", line);
             if line.contains("#perju_gatar :") {
+                let mut tracker = self.message_tracker.lock().await;
+                tracker.add_message();
                 let (before, after) = line.split_once( "#perju_gatar :").unwrap();
                 let result = commands.iter().find(|c|{
                     let mut command_name = "!".to_owned();
@@ -121,8 +171,9 @@ impl TwitchBotApp {
 
     pub async fn get_channel_info(&self) -> std::io::Result<()> {
         let req = GetChannelInformationRequest::broadcaster_ids(&["37113434"]);
+        let app_token = self.app_token.clone().unwrap();
 
-        let response = self.client.helix.req_get(req, &self.app_token).await;
+        let response = self.client.helix.req_get(req, &app_token).await;
         match response {
             Ok(data) => {
                 if let Some(channel) = data.data.get(0) {
@@ -139,13 +190,41 @@ impl TwitchBotApp {
     }
 }
 
+fn get_config_value(env_var: &str, db_key: &str, default: &str) -> String {
+    std::env::var(env_var).ok()
+        .or_else(|| {
+            match ddbb::twitch::read_token(db_key.to_string()) {
+                Ok(token) => Some(token.value),
+                Err(err) => {
+                    eprintln!("Error obteniendo '{}' desde la base de datos: {}", db_key, err);
+                    None
+                }
+            }
+        })
+        .unwrap_or_else(|| {
+            eprintln!("No se pudo obtener '{}'. Usando un valor por defecto.", env_var);
+            default.to_string()
+        })
+}
+
+
 pub fn set_timer(bot: TwitchBotApp, msg: String, ms: u64) -> u64{
     let timer_id = set_interval_async!({
         let bot_clon = bot.clone();
         let msg_clon = msg.clone();
         async move {
-            if let Err(e) = bot_clon.send_chat_message(&msg_clon.to_string()).await {
-                println!("Erro al enviar el mensaje {}", e)
+            // Cuenta de los mensajes recibidos en los ultimos X minutos
+            let recent_count = {
+                let mut tracker = bot_clon.message_tracker.lock().await;
+                tracker.count_recent()
+            };
+            
+            // Si se han recibido la cantidad minima se envia el mensaje temporizado
+            println!("Se han recibido {} mensajes en los ultimos 10 minutos", recent_count);
+            if recent_count > 5 {
+                if let Err(e) = bot_clon.send_chat_message(&msg_clon.to_string()).await {
+                    println!("Erro al enviar el mensaje {}", e)
+                }
             }
         }
     }, ms);

@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Result, params};
+use rusqlite::{Connection, Result, params, Error};
 
 use crate::server::models;
 
@@ -140,16 +140,14 @@ pub fn read_token(name: String) -> Result<models::twitch::Token> {
     let conn = Connection::open("twitch_tokens.db")?;
     let stmt = "SELECT name, value FROM tokens WHERE name = ?1";
 
-    let token = conn.query_row(
-        stmt,
-        params![name],
-        |row| {
-            Ok(models::twitch::Token {
-                name: row.get(0)?,
-                value: row.get(1)?,
-            })
-        }
-    )?;
-
-    Ok(token)
+    match conn.query_row(stmt, params![name],|row| {
+        Ok(models::twitch::Token {
+            name: row.get(0)?,
+            value: row.get(1)?,
+        })
+    }){
+        Ok(token) => Ok(token),
+        Err(Error::QueryReturnedNoRows) => Err(Error::QueryReturnedNoRows),
+        Err(err) => Err(Error::InvalidQuery),
+    }
 }

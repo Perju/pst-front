@@ -18,6 +18,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
+              "browser": "",
               "base": "dist"
             },
             "index": "src/index.html",
