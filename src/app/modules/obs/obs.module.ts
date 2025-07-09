@@ -15,14 +15,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     ControllerComponent,
     ObsLeftSideBarComponent,
-    ObsRightSideBarComponent
+    ObsRightSideBarComponent,
   ],
   imports: [
     CommonModule,
     ObsRoutingModule,
     MaterialUiModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   exports: [
     ObsLeftSideBarComponent,
@@ -30,8 +30,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     ControllerComponent,
     ObsLeftSideBarComponent,
-    ObsRightSideBarComponent
+    ObsRightSideBarComponent,
   ],
-  schemas: []
+  schemas: [],
 })
 export class ObsModule {}

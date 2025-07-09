@@ -6,28 +6,23 @@ import { ControllerComponent } from './views/controller/controller.component';
 import { LoggedInGuardService } from './services/logged-in-guard.service';
 import { ObsLeftSideBarComponent } from './views/left-side-bar/left-side-bar.component';
 
-const obsRoutes: Routes = [
+const routes: Routes = [
+  { path: 'help', component: HelpComponent },
   {
-    path: 'obs',
-    children: [
-      { path: 'help', component: HelpComponent },
-      {
-        path: 'controller',
-        component: ControllerComponent,
-        canActivate: [LoggedInGuardService]
-      },
-      { path: 'login', component: LoginComponent },
-    ]
+    path: 'controller',
+    component: ControllerComponent,
+    canActivate: [LoggedInGuardService],
   },
+  { path: '', component: LoginComponent },
   {
-    path: 'obs/leftBar',
-    component: ObsLeftSideBarComponent, outlet: 'leftBar',
-  }
+    path: 'menu',
+    component: ObsLeftSideBarComponent,
+    outlet: 'menu',
+  },
 ];
 
-const routes: Routes = [...obsRoutes];
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ObsRoutingModule { }
+export class ObsRoutingModule {}

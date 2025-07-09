@@ -3,24 +3,25 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialUiModule } from './modules/material-ui.module';
-import { ObsModule } from './modules/obs/obs.module';
-import { TwitchModule } from './modules/twitch/twitch.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavComponent } from './components/nav/nav.component';
+import { ControllerLayoutComponent } from './layout/controller-layout/controller-layout.component';
+import { ObsModule } from './modules/obs/obs.module';
+import { TwitchModule } from './modules/twitch/twitch.module';
 
 @NgModule({
-  declarations: [AppComponent, NavComponent],
+  declarations: [AppComponent, ControllerLayoutComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialUiModule,
     ObsModule,
-    TwitchModule
+    TwitchModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [MaterialUiModule],
 })
 export class AppModule {}
