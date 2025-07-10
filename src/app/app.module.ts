@@ -7,11 +7,12 @@ import { MaterialUiModule } from './modules/material-ui.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ControllerLayoutComponent } from './layout/controller-layout/controller-layout.component';
+import { OverlayComponent } from './layout/overlay/overlay.component';
 import { ObsModule } from './modules/obs/obs.module';
 import { TwitchModule } from './modules/twitch/twitch.module';
 
 @NgModule({
-  declarations: [AppComponent, ControllerLayoutComponent],
+  declarations: [AppComponent, ControllerLayoutComponent, OverlayComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

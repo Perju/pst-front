@@ -5,15 +5,17 @@ import { LoginComponent } from './views/login/login.component';
 import { ControllerComponent } from './views/controller/controller.component';
 import { LoggedInGuardService } from './services/logged-in-guard.service';
 import { ObsLeftSideBarComponent } from './views/left-side-bar/left-side-bar.component';
+import { OverlaysComponent } from './views/overlays/overlays.component';
 
 const routes: Routes = [
-  { path: 'help', component: HelpComponent },
+  { path: '', component: LoginComponent },
   {
     path: 'controller',
     component: ControllerComponent,
     canActivate: [LoggedInGuardService],
   },
-  { path: '', component: LoginComponent },
+  { path: 'help', component: HelpComponent },
+  { path: 'overlays', component: OverlaysComponent },
   {
     path: 'menu',
     component: ObsLeftSideBarComponent,

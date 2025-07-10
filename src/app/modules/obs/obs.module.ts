@@ -8,6 +8,7 @@ import { MaterialUiModule } from '../material-ui.module';
 import { ObsRoutingModule } from './obs-routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OverlaysComponent } from './views/overlays/overlays.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ControllerComponent,
     ObsLeftSideBarComponent,
     ObsRightSideBarComponent,
+    OverlaysComponent,
   ],
   imports: [
     CommonModule,

@@ -11,5 +11,6 @@ export class ObsLeftSideBarComponent {
     { label: 'Conectar', href: '/obs' },
     { label: 'Controlador', href: '/obs/controller' },
     { label: 'Ayuda', href: '/obs/help' },
+    { label: 'Overlays', href: '/obs/overlays' },
   ];
 }
