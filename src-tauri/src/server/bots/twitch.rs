@@ -155,7 +155,7 @@ impl TwitchBotApp {
                 }
                 let (_before, after) = line.split_once( "#perju_gatar :").unwrap();
                 // si es un comando buscanmos entre los comandos
-                if(after.starts_with("!")) {
+                if after.starts_with("!") {
                     let result = commands.iter().find(|c|{
                         let mut command_name = "!".to_owned();
                         command_name.push_str(&c.name);
