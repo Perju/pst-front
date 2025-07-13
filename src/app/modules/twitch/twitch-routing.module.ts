@@ -7,24 +7,20 @@ import { TimersComponent } from './views/timers/timers.component';
 import { TwitchLeftSideBarComponent } from './views/left-side-bar/left-side-bar.component';
 
 export const twitchRoutes: Routes = [
+  { path: '', component: TwitchLoginComponent },
+  { path: 'help', component: TwitchHelpComponent },
+  { path: 'timers', component: TimersComponent },
+  { path: 'commands', component: CommandsComponent },
   {
-    path: 'twitch',
-    children: [
-      { path: 'help', component: TwitchHelpComponent },
-      { path: 'timers', component: TimersComponent },
-      { path: 'commands', component: CommandsComponent },
-      { path: 'login', component: TwitchLoginComponent }
-    ]
+    path: 'menu',
+    component: TwitchLeftSideBarComponent,
+    outlet: 'menu',
   },
-  {
-    path: 'twitch/leftBar',
-    component: TwitchLeftSideBarComponent, outlet: 'leftBar',
-  }
 ];
 
 const routes: Routes = [...twitchRoutes];
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class TwitchRoutingModule { }
+export class TwitchRoutingModule {}

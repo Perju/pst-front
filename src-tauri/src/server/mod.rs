@@ -6,6 +6,8 @@ pub mod models;
 pub mod ddbb;
 #[path="bots/mod.rs"]
 pub mod bots;
+#[path="websocket/mod.rs"]
+pub mod websocket;
 
 use std::sync::Mutex;
 
@@ -26,6 +28,11 @@ pub async fn init(app: AppHandle) -> std::io::Result<()> {
     });
 
     tokio::spawn(bots::twitch::main(tauri_app.twitch_bot.lock().unwrap().clone()));
+
+    let websocket_task = tokio::spawn(websocket::main());
+    if let Err(e) = websocket_task.await {
+        println!("Websocket task failed: {:?}", e);
+    }
     
     HttpServer::new(move || {
         let cors = Cors::default()

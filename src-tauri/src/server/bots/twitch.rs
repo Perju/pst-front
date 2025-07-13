@@ -14,7 +14,7 @@ use tokio_js_set_interval::set_interval_async;
 use twitch_api::twitch_oauth2::{ AccessToken, AppAccessToken, TwitchToken, UserToken};
 use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 
-use crate::server::ddbb;
+use crate::server::{self, ddbb};
 
 struct MessageTracker {
     messages: VecDeque<Instant>,
@@ -144,22 +144,32 @@ impl TwitchBotApp {
 
         let mut line = String::new();
         while reader.read_line(&mut line).await? > 0{
-            println!("Recibido: {}", line);
+            let bot_chat_username = self.chat_token.as_ref().unwrap().login.to_string();
             if line.contains("#perju_gatar :") {
+                let start_name = line.find("@").unwrap_or(0);
+                let end_name = line.find(".tmi.twitch.tv").unwrap_or(0);
+                let sender = line[start_name+1..end_name].to_string();
                 let mut tracker = self.message_tracker.lock().await;
-                tracker.add_message();
-                let (before, after) = line.split_once( "#perju_gatar :").unwrap();
-                let result = commands.iter().find(|c|{
-                    let mut command_name = "!".to_owned();
-                    command_name.push_str(&c.name);
-                    after.starts_with(&command_name)
-                });
-                match result {
-                    Some(command)=> {
-                        self.send_chat_message(&command.response.to_string()).await;
-                        ()
-                    },
-                    None => println!("No hay resultado:"),
+                if sender != bot_chat_username {
+                    tracker.add_message();
+                }
+                let (_before, after) = line.split_once( "#perju_gatar :").unwrap();
+                // si es un comando buscanmos entre los comandos
+                if after.starts_with("!") {
+                    let result = commands.iter().find(|c|{
+                        let mut command_name = "!".to_owned();
+                        command_name.push_str(&c.name);
+                        after.starts_with(&command_name)
+                    });
+                    match result {
+                        Some(command)=> {
+                            println!("La respuesta al comando recibido es {:?}", command);
+                            let message: String = self.replace_variables(command, after, &sender).await;
+                            self.send_chat_message(&message).await;
+                            ()
+                        },
+                        None => println!("No hay respuesta para el comando recibido"),
+                    }
                 }
             }
 
@@ -187,6 +197,18 @@ impl TwitchBotApp {
         }
 
         Ok(())
+    }
+
+    async fn replace_variables(&self, command: &server::models::twitch::Command, _after: &str, sender: &str) -> String {
+        let mut response: String = command.response.to_string().to_owned();
+        let words = _after.split(" ").collect::<Vec<&str>>();
+        response = response.replace("${sender}", sender);
+        for(i, word) in words.iter().enumerate(){
+            let placeholder = format!("${{{}}}", i);
+            response = response.replace(&placeholder, word);
+        }
+
+        response
     }
 }
 

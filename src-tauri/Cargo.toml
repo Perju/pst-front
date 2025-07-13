@@ -1,6 +1,6 @@
 [package]
 name = "PST"
-version = "0.9.7"
+version = "0.9.8"
 description = "A collection of streaming tools"
 authors = ["Perju"]
 license = "MIT"
@@ -27,6 +27,12 @@ reqwest = "0.12.9"
 tokio = { version = "1.41.1", features = ["full"]  }
 dotenv = "0.15.0"
 tokio-js-set-interval = "1.3.0"
+tokio-tungstenite = "0.27.0"
+futures-util = "0.3.31"
+tungstenite = "0.27.0"
+log = "0.4.27"
+uuid = "1.17.0"
+env_logger = "0.11.8"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
