@@ -1,6 +1,6 @@
 [package]
 name = "PST"
-version = "0.9.7"
+version = "0.9.8"
 description = "A collection of streaming tools"
 authors = ["Perju"]
 license = "MIT"
