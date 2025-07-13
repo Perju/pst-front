@@ -1,14 +1,33 @@
-<div class="overlay">
-    <span>
-        {{ app_host.origin }}/overlays/obs/timer
-    </span>
-    <form [formGroup]="timerForm" action="">    
-        <input type="text" name="titulo" placeholder="Título" value="Cuenta atras">
-        <div class="form-time">
-            <input type="number" formControlName="horas" name="horas" placeholder="Horas" value="0">
-            <input type="number" formControlName="minutos" name="minutos" placeholder="Minutos" value="10">
-            <input type="number" formControlName="segundos" name="segundos" placeholder="Segundos" value="0">
+<mat-card>
+    <mat-card-header>
+        <mat-panel-title>Timer:&nbsp;</mat-panel-title>
+        <span>
+            {{ app_host.origin }}/overlays/obs/timer
+        </span>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="overlay">
+            <form [formGroup]="timerForm" action="">
+                <mat-form-field>
+                    <mat-label for="titulo">Titulo</mat-label>
+                    <input matInput type="text" formControlName="titulo" name="titulo" placeholder="Título" value="Cuenta atras">
+                </mat-form-field>
+                <button mat-raised-button color="accent" (click)="sendMessage()">Actualizar</button>
+                <div class="form-time">
+                    <mat-form-field class="numTime">
+                        <label for="horas">Horas</label>
+                        <input matInput type="number" formControlName="horas" name="horas" placeholder="Horas" value="0">
+                    </mat-form-field>
+                    <mat-form-field class="numTime">
+                        <label for="minutos">Minutos</label>
+                        <input matInput type="number" formControlName="minutos" name="minutos" placeholder="Minutos" value="10">
+                    </mat-form-field>
+                    <mat-form-field class="numTime">
+                        <label for="segundos">Segundos</label>
+                        <input matInput type="number" formControlName="segundos" name="segundos" placeholder="Segundos" value="0">
+                    </mat-form-field>
+                </div>
+            </form>
         </div>
-        <input type="submit" value="Actualizar" (click)="sendMessage()">
-    </form>
-</div>
+    </mat-card-content>
+</mat-card>
