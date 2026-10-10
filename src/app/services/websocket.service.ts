@@ -9,7 +9,7 @@ export class WebsocketService {
   private subject$ = new Subject<any>();
 
   public connect(): void {
-    this.socket = new WebSocket('ws://localhost:9001');
+    this.socket = new WebSocket(`ws://${window.location.hostname}:9001`);
 
     this.socket.onopen = event => {
       console.log('Websocket connected: ', event);

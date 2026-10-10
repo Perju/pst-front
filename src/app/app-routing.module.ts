@@ -26,7 +26,7 @@ const routes: Routes = [
     component: OverlayComponent,
     children: [
       {
-        path: 'obs/timer',
+        path: 'timer',
         component: OvlTimerComponent,
       },
     ],

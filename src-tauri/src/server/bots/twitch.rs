@@ -13,6 +13,7 @@ use reqwest::Client;
 use tokio_js_set_interval::set_interval_async;
 use twitch_api::twitch_oauth2::{ AccessToken, AppAccessToken, TwitchToken, UserToken};
 use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
+use twitch_api::helix::HelixClient;
 
 use crate::server::{self, ddbb};
 
@@ -55,7 +56,8 @@ impl MessageTracker {
 #[derive(Clone)]
 pub struct TwitchBotApp {
     client: TwitchClient<'static, reqwest::Client>,
-    app_token: Result<AppAccessToken, ()>,
+    pub helix_client: HelixClient<'static, reqwest::Client>,
+    pub app_token: Result<AppAccessToken, ()>,
     chat_token: Result<UserToken, ()>,
     chat_username: String,
     chat_channel_id: String,
@@ -101,6 +103,7 @@ impl TwitchBotApp {
 
         TwitchBotApp {
             client,
+            helix_client,
             app_token,
             chat_token,
             chat_username,

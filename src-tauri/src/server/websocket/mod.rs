@@ -37,7 +37,7 @@ impl PeerMap {
 
 pub async fn main() {
     env_logger::init();
-    let addr = "127.0.0.1:9001";
+    let addr = "0.0.0.0:9001";
     let listener = TcpListener::bind(&addr).await.expect("Cannot bind");
     println!("WebSocket server listening on {}", addr);
 

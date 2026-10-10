@@ -9,7 +9,7 @@
     "ng": "ng",
     "start": "npm run tauri:serve",
     "web:serve": "ng serve -o",
-    "web:build": "ng build --base-href ./",
+    "web:build": "ng build --base-href /",
     "web:deb": "npm run web:build",
     "web:prod": "npm run web:build -- -c production",
     "web:servedesktop": "ng serve -o -c desktop",

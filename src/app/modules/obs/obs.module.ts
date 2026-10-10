@@ -8,7 +8,7 @@ import { MaterialUiModule } from '../material-ui.module';
 import { ObsRoutingModule } from './obs-routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OverlaysComponent } from './views/overlays/overlays.component';
+import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays.component';
 
 @NgModule({
   declarations: [

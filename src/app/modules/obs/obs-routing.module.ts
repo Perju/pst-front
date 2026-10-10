@@ -5,7 +5,8 @@ import { LoginComponent } from './views/login/login.component';
 import { ControllerComponent } from './views/controller/controller.component';
 import { LoggedInGuardService } from './services/logged-in-guard.service';
 import { ObsLeftSideBarComponent } from './views/left-side-bar/left-side-bar.component';
-import { OverlaysComponent } from './views/overlays/overlays.component';
+import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays.component';
+import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
