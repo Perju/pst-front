@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ControllerLayoutComponent } from './layout/controller-layout/controller-layout.component';
 import { OverlayComponent } from './layout/overlay/overlay.component';
 import { OvlTimerComponent } from './modules/obs/views/overlays/ovl-timer/ovl-timer.component';
+import { ClipViewerComponent } from './modules/obs/views/overlays/clip-viewer/clip-viewer.component';
+
 
 const routes: Routes = [
   {
@@ -28,6 +30,10 @@ const routes: Routes = [
       {
         path: 'timer',
         component: OvlTimerComponent,
+      },
+      {
+        path: 'twitch/clips-viewer',
+        component: ClipViewerComponent,
       },
     ],
   },

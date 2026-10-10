@@ -9,6 +9,7 @@ dependencies = [
  "actix-cors",
  "actix-files",
  "actix-web",
+ "dirs",
  "dotenv",
  "env_logger",
  "futures",

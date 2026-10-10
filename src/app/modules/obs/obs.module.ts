@@ -9,6 +9,7 @@ import { ObsRoutingModule } from './obs-routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays.component';
+import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays
     MaterialUiModule,
     FormsModule,
     ReactiveFormsModule,
+    ClipViewerComponent,
   ],
   exports: [
     ObsLeftSideBarComponent,
@@ -33,6 +35,7 @@ import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays
     ControllerComponent,
     ObsLeftSideBarComponent,
     ObsRightSideBarComponent,
+    ClipViewerComponent,
   ],
   schemas: [],
 })

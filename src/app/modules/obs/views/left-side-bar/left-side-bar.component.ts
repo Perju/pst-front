@@ -12,5 +12,6 @@ export class ObsLeftSideBarComponent {
     { label: 'Controlador', href: '/obs/controller' },
     { label: 'Ayuda', href: '/obs/help' },
     { label: 'Overlays', href: '/obs/overlays' },
+    { label: 'Clips Viewer', href: '/overlays/twitch/clips-viewer' }
   ];
 }

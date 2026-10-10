@@ -102,6 +102,29 @@ pub async fn create(payload: web::Payload) -> actix_web::Result<HttpResponse, Er
     Ok(HttpResponse::Ok().json(""))
 }
 
+#[get("/api/twitch/{user_id}/randomClip")]
+pub async fn get_random_clip(
+    path: web::Path<String>,
+    data: web::Data<TauriAppState>
+) -> Result<HttpResponse, Error> {
+    println!("holiwis");
+    let user_id = path.into_inner();
+    println!("El user id es: {}", user_id);
+
+    let twitch_bot = data.twitch_bot.lock().unwrap();
+
+    let req = get_clips::GetClipsRequest::broadcaster_id(user_id).first(20);
+
+    let app_token = twitch_bot.app_token.clone().map_err(|_| actix_web::error::ErrorInternalServerError("No app token"))?;
+
+    let helix_response = twitch_bot.helix_client.req_get(req, &app_token).await.map_err(actix_web::error::ErrorInternalServerError)?;
+
+    // Return the first clip for now, or handle empty list
+    let clip = helix_response.data.get(0).cloned();
+
+    Ok(HttpResponse::Ok().json(clip))
+}
+
 /**
  * Tokens
  * * * * * */

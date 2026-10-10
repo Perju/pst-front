@@ -1,0 +1,8 @@
+@if (safeEmbedUrl) {
+    <div>
+        <iframe [src]="safeEmbedUrl" height="720" width="1280" allowfullscreen>
+        </iframe>
+    </div>
+} @if (!safeEmbedUrl) {
+    <div>Loading clip...</div>
+}

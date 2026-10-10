@@ -69,11 +69,16 @@ pub struct TwitchBotApp {
 impl TwitchBotApp {
     pub async fn new() -> Self {
         dotenv().ok();
+        // Tokens
         let tkn_client_id = get_config_value("TKN_CLIENT_ID", "appToken", "DEFAULT_TOKEN");
         let tkn_client_secret = get_config_value("TKN_CLIENT_SECRET", "appSecret", "DEFAULT_TOKEN");
         let tkn_bot= get_config_value("TKN_BOT", "appChatToken", "DEFAULT_TOKEN");
+
+        // Clientes
         let client = TwitchClient::default();
+        let helix_client = HelixClient::default();
         let http_client = Client::new();
+
         let app_token: Result<AppAccessToken, ()> = match AppAccessToken::get_app_access_token(
             &client,
             tkn_client_id.into(),

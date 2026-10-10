@@ -17,6 +17,7 @@ const routes: Routes = [
   },
   { path: 'help', component: HelpComponent },
   { path: 'overlays', component: OverlaysComponent },
+  { path: 'clip/:userId', component: ClipViewerComponent },
   {
     path: 'menu',
     component: ObsLeftSideBarComponent,
