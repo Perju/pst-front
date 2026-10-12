@@ -47,7 +47,7 @@ pub fn create_tables() -> Result<()> {
 }
 
 pub fn create_table_tokens() -> Result<()> {
-    let path = resolve_home_path("pst/twitch.db");
+    let path = resolve_home_path("pst/twitch_tokens.db");
     let conn_tkn = Connection::open(path)?;
     conn_tkn.execute(
         "create table if not exists tokens (
@@ -135,7 +135,7 @@ pub fn read_timers() -> Result<Vec<models::twitch::Timer>> {
 }
 
 pub fn add_token(token: &models::twitch::Token) -> Result<()>{
-    let path = resolve_home_path("pst/twitch.db");
+    let path = resolve_home_path("pst/twitch_tokens.db");
     let conn = Connection::open(path)?;
 
     match conn.execute(
@@ -148,7 +148,7 @@ pub fn add_token(token: &models::twitch::Token) -> Result<()>{
 }
 
 pub fn update_token(token: &models::twitch::Token) -> Result<()>{
-    let path = resolve_home_path("pst/twitch.db");
+    let path = resolve_home_path("pst/twitch_tokens.db");
     let conn = Connection::open(path)?;
 
     match conn.execute(
@@ -161,7 +161,7 @@ pub fn update_token(token: &models::twitch::Token) -> Result<()>{
 }
 
 pub fn read_token(name: String) -> Result<models::twitch::Token> {
-    let path = resolve_home_path("pst/twitch.db");
+    let path = resolve_home_path("pst/twitch_tokens.db");
     let conn = Connection::open(path)?;
     let stmt = "SELECT name, value FROM tokens WHERE name = ?1";
 

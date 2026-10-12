@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { WSMessage } from 'src/app/services/websocket.interface';
 import { WebsocketService } from 'src/app/services/websocket.service';
+
+interface TimerData {
+  text: string;
+}
 
 @Component({
   selector: 'app-ovl-timer',
@@ -10,16 +15,17 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 })
 export class OvlTimerComponent implements OnInit {
   private subscription!: Subscription;
+  private channel = 'timer';
+  private target = 'timer-controler';
   private titulo = '';
   private horas = 0;
   private minutos = 10;
   private segundos = 0;
 
-  constructor(private webSocketService: WebsocketService) {
-    this.webSocketService.connect();
-  }
-
+  constructor(private webSocketService: WebsocketService) {}
   ngOnInit(): void {
+    const connection = this.webSocketService.connect<WSMessage<TimerData>>(this.channel);
+
     this.updateTimer(this.horas, this.minutos, this.segundos);
     setInterval(() => {
       if (this.segundos > 0) {
@@ -37,26 +43,24 @@ export class OvlTimerComponent implements OnInit {
     console.log(this.minutos);
 
     this.setTitle();
-    this.subscription = this.webSocketService
-      .getMessage()
-      .subscribe(message => {
-        const timeData = JSON.parse(message.content);
-        console.log('Timedata: ', timeData);
-        this.horas = timeData.horas || 0;
-        this.minutos = timeData.minutos || 10;
-        this.segundos = timeData.segundos || 0;
-        this.titulo = timeData.titulo || '';
-        this.setTitle();
-        console.log(message);
-      });
-    console.log('mamahuevo');
-    setTimeout(() => {
-      this.webSocketService.sendMessage({
-        sender: 'obs/timer',
-        content: 'hola server, registrame en tu lista',
-        target: 'None',
-      });
-    }, 1000);
+
+    this.subscription = connection.stream$.subscribe({
+      next: mensaje => console.log('Mensaje recibido.', mensaje.data),
+      error: err => console.error('Error en WS:', err),
+      complete: () => console.log('El flujo terminó.'),
+    });
+
+    this.enviar({ text: '¡Hola a todos!' });
+  }
+
+  public enviar(data: TimerData): void {
+    const mensaje: WSMessage<TimerData> = {
+        sender: this.channel,
+        target: this.target,
+        data: data
+    };
+
+    this.webSocketService.sendMessage(this.channel, mensaje);
   }
 
   // actualizar el temporizador
@@ -77,6 +81,6 @@ export class OvlTimerComponent implements OnInit {
     if (titleElement != null) titleElement.innerHTML = this.titulo;
   }
   onDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) this.subscription.unsubscribe();
   }
 }

@@ -1,0 +1,20 @@
+<mat-card>
+    <mat-card-header>
+        <mat-panel-title>Timer:&nbsp;</mat-panel-title>
+        <span>
+            {{ app_host.origin }}/overlays/twitch/clip
+        </span>
+        <h1>Crear control para el clip</h1>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="overlay">
+            <form [formGroup]="clipForm" action="">
+                <mat-form-field>
+                    <mat-label for="userId">UserId</mat-label>
+                    <input matInput type="text" formControlName="userId" name="userId" placeholder="UserId" value="37113434">
+                </mat-form-field>
+                <button mat-raised-button color="accent" (click)="sendMessage()">Actualizar</button>
+            </form>
+        </div>
+    </mat-card-content>
+</mat-card>

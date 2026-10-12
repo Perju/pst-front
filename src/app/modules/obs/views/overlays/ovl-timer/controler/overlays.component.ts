@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { WSMessage } from 'src/app/services/websocket.interface';
 import { WebsocketService } from 'src/app/services/websocket.service';
+
+interface TimerData {
+  text: string;
+}
 
 @Component({
   selector: 'twitch-overlays',
@@ -11,6 +16,8 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 })
 export class OverlaysComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
+  private channel = 'timer-controler';
+  private target = 'timer';
   public app_host: Location;
 
   public timerForm = new FormGroup({
@@ -25,28 +32,26 @@ export class OverlaysComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.app_host);
-    this.webSocketService.connect();
-    this.subscription = this.webSocketService
-      .getMessage()
-      .subscribe(message => {
-        console.log(message);
-      });
+    const connection = this.webSocketService.connect<WSMessage<TimerData>>(this.channel);
+
+    this.subscription = connection.stream$.subscribe({
+      next: mensaje => console.log('Mensaje recibido.', mensaje.data),
+      error: err => console.error('Error en WS:', err),
+      complete: () => console.log('El flujo terminó.'),
+    });
   }
 
   public sendMessage(): void {
-    const content = JSON.stringify(this.timerForm.value);
-    console.log('Formulario: ', content, this.timerForm.value);
-    const message = {
-      sender: 'overlays-component',
-      content: content,
-      target: 'obs/timer',
-    };
-    this.webSocketService.sendMessage(message);
+    const content = this.timerForm.value;
+    console.log('Formulario: ', content);
+    this.webSocketService.sendMessage(this.channel, {
+      sender: this.channel,
+      data: content,
+      target: this.target,
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.disconnect();
+    if (this.subscription) this.subscription.unsubscribe();
   }
 }

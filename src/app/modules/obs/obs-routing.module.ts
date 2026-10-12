@@ -7,6 +7,7 @@ import { LoggedInGuardService } from './services/logged-in-guard.service';
 import { ObsLeftSideBarComponent } from './views/left-side-bar/left-side-bar.component';
 import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays.component';
 import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.component';
+import { ClipViewerControllerComponent } from './views/overlays/clip-viewer/clip-viewer-controller/clip-viewer-controller.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   },
   { path: 'help', component: HelpComponent },
   { path: 'overlays', component: OverlaysComponent },
+  { path: 'clip-controller', component: ClipViewerControllerComponent },
   { path: 'clip/:userId', component: ClipViewerComponent },
   {
     path: 'menu',

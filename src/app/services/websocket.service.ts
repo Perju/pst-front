@@ -1,49 +1,68 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { WebSocketConnection, WSMessage } from './websocket.interface';
+import { webSocket } from 'rxjs/webSocket';
+import { shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService {
-  private socket!: WebSocket;
-  private subject$ = new Subject<any>();
+  private connections = new Map<string, WebSocketConnection>();
 
-  public connect(): void {
-    this.socket = new WebSocket(`ws://${window.location.hostname}:9001`);
-
-    this.socket.onopen = event => {
-      console.log('Websocket connected: ', event);
-    };
-
-    this.socket.onmessage = event => {
-      const message = JSON.parse(event.data);
-      this.subject$.next(message);
-    };
-
-    this.socket.onerror = error => {
-      console.log('Websocket error: ', error);
-    };
-
-    this.socket.onclose = event => {
-      console.log('Websocket closed: ', event);
-    };
-  }
-
-  public sendMessage(message: any): void {
-    if (this.socket.readyState !== WebSocket.OPEN) {
-      return console.log('Websocket is not open');
+  public connect<T>(channelId: string): WebSocketConnection<WSMessage<T>> {
+    if (this.connections.has(channelId)) {
+      return this.connections.get(channelId) as WebSocketConnection<WSMessage<T>>;
     }
+    // this.socket = new WebSocket(`ws://${window.location.hostname}:9001`);
 
-    this.socket.send(JSON.stringify(message));
+    const socket$ = webSocket<WSMessage<T>>({
+      url: `ws://${window.location.hostname}:9001`,
+      openObserver: {
+        next: () => {
+          console.log(`WS Conectado: ${channelId}`)
+        }
+      },
+      closeObserver: {
+        next: () =>
+          console.log(`Conexion cerrándose para el canal. ${channelId}`),
+      },
+    });
+
+    const stream$ = socket$.pipe(
+      // shareReplay({ bufferSize: 1, refCount: true })
+      shareReplay(1)
+    );
+    const connection$: WebSocketConnection<WSMessage<T>> = { socket$, stream$ };
+
+    this.connections.set(channelId, connection$);
+
+    return connection$;
   }
 
-  public getMessage(): Observable<any> {
-    return this.subject$.asObservable();
+  public getConnection<T>(channelId: string): WebSocketConnection<T> | undefined {
+    return this.connections.get(channelId) as WebSocketConnection<T> | undefined;
   }
 
-  public disconnect(): void {
-    if (this.socket) {
-      this.socket.close();
+  public sendMessage<T>(channelId: string, message: any): void {
+    const connection = this.connections.get(channelId);
+    if (connection) {
+      console.log("La conexión: ", connection.socket$);
+      connection.socket$.next(message);
+    } else {
+      console.warn(`No se encontró conoexión activa para el canal: ${channelId}`);
     }
+  }
+
+  public disconnect(channelId: string): void {
+    const connection = this.connections.get(channelId);
+    if (connection) {
+      connection.socket$.complete();
+      this.connections.delete(channelId);
+      console.log(`Canal ${channelId} removido`);
+    }
+  }
+
+  public disconnectAll(): void {
+    this.connections.forEach((_, channelId) => this.disconnect(channelId));
   }
 }

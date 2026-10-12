@@ -1,16 +1,17 @@
-use std::{collections::HashMap, net::SocketAddr, sync::Arc};
+use std::{collections::HashMap, sync::Arc};
 use futures::{StreamExt, SinkExt};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{mpsc, RwLock};
 use tokio_tungstenite::{accept_async, tungstenite::Message};
 use serde::{Serialize, Deserialize};
+use serde_json::Value;
 
 type Tx = mpsc::UnboundedSender<Message>;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct WsMessage {
     target: String,
-    content: String,
+    data: Value,
     sender: String,
 }
 
@@ -64,9 +65,12 @@ async fn handle_connection(peer_map: Arc<PeerMap>, stream: TcpStream) {
 
     let forward = async {
         while let Some(Ok(msg)) = ws_receiver.next().await {
+            println!("llegan datos {}", msg);
             if msg.is_text() {
-                println!("el mensaje es None? {:?}\n Y client_id es none? {}",msg.to_text().unwrap(), client_id.is_none());
+                // println!("el mensaje es None? {:?}\n Y client_id es none? {}"
+                //     ,msg.to_text().unwrap(), client_id.is_none());
                 if let Ok(parsed) = serde_json::from_str::<WsMessage>(msg.to_text().unwrap()) {
+                    println!("Existe el cliente con id: {}? {}", parsed.sender, !parsed.sender.is_empty());
                     // Registrar si es la primera vez que recibimos algo del sender
                     if client_id.is_none() {
                         println!("Registering client: {}", parsed.sender);
@@ -80,6 +84,8 @@ async fn handle_connection(peer_map: Arc<PeerMap>, stream: TcpStream) {
                         .broadcast_to(&parsed.target, Message::text(msg.to_text().unwrap()))
                         .await;
                 } 
+            } else {
+                println!("Lo que llego no era texto {}", msg);
             }
         }
 

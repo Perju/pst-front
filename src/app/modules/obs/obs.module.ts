@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlaysComponent } from './views/overlays/ovl-timer/controler/overlays.component';
 import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.component';
+import { ClipViewerControllerComponent } from './views/overlays/clip-viewer/clip-viewer-controller/clip-viewer-controller.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.co
     ObsLeftSideBarComponent,
     ObsRightSideBarComponent,
     OverlaysComponent,
+    ClipViewerControllerComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { ClipViewerComponent } from './views/overlays/clip-viewer/clip-viewer.co
     ObsLeftSideBarComponent,
     ObsRightSideBarComponent,
     ClipViewerComponent,
+    ClipViewerControllerComponent
   ],
   schemas: [],
 })
