@@ -6,6 +6,9 @@ use web::BytesMut;
 
 use crate::server::{models, ddbb, TauriAppState};
 use twitch_api::helix::clips::get_clips;
+use twitch_api::types::Nickname;
+
+use rand::Rng;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TwitchReadRequest {
@@ -102,27 +105,39 @@ pub async fn create(payload: web::Payload) -> actix_web::Result<HttpResponse, Er
     Ok(HttpResponse::Ok().json(""))
 }
 
-#[get("/api/twitch/{user_id}/randomClip")]
+#[get("/api/twitch/{user_name}/randomClip")]
 pub async fn get_random_clip(
     path: web::Path<String>,
     data: web::Data<TauriAppState>
 ) -> Result<HttpResponse, Error> {
-    println!("holiwis");
-    let user_id = path.into_inner();
-    println!("El user id es: {}", user_id);
-
+    // preparamos el bot y realizamos la peticion
     let twitch_bot = data.twitch_bot.lock().unwrap();
-
-    let req = get_clips::GetClipsRequest::broadcaster_id(user_id).first(20);
-
     let app_token = twitch_bot.app_token.clone().map_err(|_| actix_web::error::ErrorInternalServerError("No app token"))?;
 
-    let helix_response = twitch_bot.helix_client.req_get(req, &app_token).await.map_err(actix_web::error::ErrorInternalServerError)?;
+    // creamos la peticion de clips
+    let user_name = Nickname::from(path.into_inner());
+    if let Some(user) = twitch_bot.helix_client.get_user_from_login(&user_name, &app_token)
+                                                    .await
+                                                    .map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))? {
+    // 4. Aquí tienes el ID del usuario
+        let user_id = user.id;
+        let req = get_clips::GetClipsRequest::broadcaster_id(user_id.clone());
+        let helix_response = twitch_bot.helix_client.req_get(req, &app_token).await.map_err(actix_web::error::ErrorInternalServerError)?;
 
-    // Return the first clip for now, or handle empty list
-    let clip = helix_response.data.get(0).cloned();
+        // generamos un numero aleatorio entre 0 y la longitud de la respuesta
+        let mut rng = rand::rng();
+        println!("data.len {}, user_id {}", helix_response.data.len(), user_id);
+        let random_number =    rng.gen_range(0..helix_response.data.len());
 
-    Ok(HttpResponse::Ok().json(clip))
+        // Devolvemos el clip elegido con el numero aleatorio
+        let clip = helix_response.data.get(random_number).cloned();
+
+        Ok(HttpResponse::Ok().json(clip))
+    } else {
+        println!("No se encontró ningún usuario con ese nombre.");
+        Ok(HttpResponse::Ok().json("no hay na"))
+    }
+
 }
 
 /**

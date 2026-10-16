@@ -36,6 +36,7 @@ uuid = "1.17.0"
 env_logger = "0.11.8"
 ipnet = "2.12.2"
 dirs = "7.0.0"
+rand = "0.9.5"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
