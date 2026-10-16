@@ -21,7 +21,7 @@ export class ClipViewerControllerComponent implements OnInit, OnDestroy {
   public app_host: Location;
 
   public clipForm = new FormGroup({
-    userId: new FormControl('37113434')
+    userId: new FormControl('perju_gatar')
   });
 
   constructor(private webSocketService: WebsocketService) {
