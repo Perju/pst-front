@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -21,10 +21,11 @@ export class ClipViewerComponent implements OnInit, OnDestroy {
   private target = 'clip-viewer-controler';
   clip: any;
   safeEmbedUrl: SafeResourceUrl | undefined;
+  isVisible: boolean = false;
 
   constructor(
     private http: HttpClient,
-    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private webSocketService: WebsocketService
   ) {}
@@ -47,8 +48,24 @@ export class ClipViewerComponent implements OnInit, OnDestroy {
               if (this.clip && this.clip.embed_url) {
                 let url = this.clip.embed_url;
                 url += `&autoplay=true&parent=${currentDomain}`;
+                this.isVisible = true;
+                this.safeEmbedUrl = undefined;
+
+                this.cdr.detectChanges();
+
+                setTimeout(() => {
                 this.safeEmbedUrl =
                   this.sanitizer.bypassSecurityTrustResourceUrl(url);
+                  this.cdr.detectChanges();
+                }, 50);
+
+                // Ocultar el clip después de que termine
+                const duration = this.clip.duration ? this.clip.duration * 1000 : 30000;
+                setTimeout(() => {
+                    this.isVisible = false;
+                    this.safeEmbedUrl = undefined;
+                    this.clip = undefined;
+                }, duration + 50);
               }
             });
       },
