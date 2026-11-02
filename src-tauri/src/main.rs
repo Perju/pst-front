@@ -4,6 +4,7 @@
 use std::thread;
 
 mod server;
+mod core;
 
 fn main() {
   tauri::Builder::default()

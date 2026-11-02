@@ -5,6 +5,7 @@ use serde_json::to_string;
 use web::BytesMut;
 
 use crate::server::{models, ddbb, TauriAppState};
+use crate::core::domain::twitch::entity::Command;
 use twitch_api::helix::clips::get_clips;
 use twitch_api::types::Nickname;
 
@@ -92,7 +93,7 @@ pub async fn create(payload: web::Payload) -> actix_web::Result<HttpResponse, Er
     match obj["table"].as_str().unwrap() {
         "twitch_commands" => {
             let json_string = serde_json::to_string_pretty(&obj["data"])?;
-            let command: &models::twitch::Command = &serde_json::from_str(json_string.as_str()).unwrap();
+            let command: &Command = &serde_json::from_str(json_string.as_str()).unwrap();
             ddbb::twitch::create_command(command).unwrap();
         },
         "twitch_timers" => {

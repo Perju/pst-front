@@ -3,6 +3,7 @@ use dirs::home_dir;
 use std::path::{ PathBuf, Path };
 
 use crate::server::models;
+use crate::core::domain::twitch::entity::Command;
 
 fn resolve_home_path<P: AsRef<Path>>(subpath: P) -> PathBuf {
     let subpath_buf = PathBuf::from(subpath.as_ref());
@@ -60,7 +61,7 @@ pub fn create_table_tokens() -> Result<()> {
     Ok(())
 }
 
-pub fn create_command(command: &models::twitch::Command) -> Result<()> {
+pub fn create_command(command: &Command) -> Result<()> {
     let path = resolve_home_path("pst/twitch.db");
     let conn = Connection::open(path)?;
 
@@ -73,13 +74,13 @@ pub fn create_command(command: &models::twitch::Command) -> Result<()> {
     }
 }
 
-pub fn read_commands() -> Result<Vec<models::twitch::Command>> {
+pub fn read_commands() -> Result<Vec<Command>> {
     let path = resolve_home_path("pst/twitch.db");
     let conn = Connection::open(path)?;
 
     let mut stmt = conn.prepare("SELECT id, name, response, active, usr_lvl FROM commands")?;
     let command_iter = stmt.query_map([], |row| {
-       Ok(models::twitch::Command {
+       Ok(Command {
            id: row.get(0)?,
            name: row.get(1)?,
            response: row.get(2)?,
@@ -88,7 +89,7 @@ pub fn read_commands() -> Result<Vec<models::twitch::Command>> {
        })
     })?;
     // rellenamos el vector con los elementos conseguidos en la consulta
-    let mut v: Vec<models::twitch::Command> = Vec::new();
+    let mut v: Vec<Command> = Vec::new();
     for command in command_iter {
         let value= command.unwrap();
         v.push(value);

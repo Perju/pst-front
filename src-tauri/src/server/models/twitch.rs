@@ -1,15 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Command {
-    pub id: i32,
-    pub name: String,
-    pub response: String,
-    pub active: bool,
-    pub usr_lvl: i32,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct Timer {
     pub id: i32,
     pub name: String,
@@ -29,18 +20,6 @@ pub struct AppToken {
 pub struct Token {
     pub name: String,
     pub value: String,
-}
-
-impl Command {
-    pub fn new(id: i32, name: &str, response: &str, active: bool, usr_lvl: i32) -> Self {
-        Command {
-            id,
-            name: name.to_string(),
-            response: response.to_string(),
-            active,
-            usr_lvl,
-        }
-    }
 }
 
 impl Timer {

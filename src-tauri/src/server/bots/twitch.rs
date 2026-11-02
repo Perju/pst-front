@@ -16,6 +16,7 @@ use twitch_api::{helix::channels::GetChannelInformationRequest, TwitchClient};
 use twitch_api::helix::HelixClient;
 
 use crate::server::{self, ddbb};
+use crate::core::domain::twitch::entity::Command;
 
 struct MessageTracker {
     messages: VecDeque<Instant>,
@@ -207,7 +208,7 @@ impl TwitchBotApp {
         Ok(())
     }
 
-    async fn replace_variables(&self, command: &server::models::twitch::Command, _after: &str, sender: &str) -> String {
+    async fn replace_variables(&self, command: &Command, _after: &str, sender: &str) -> String {
         let mut response: String = command.response.to_string().to_owned();
         let words = _after.split(" ").collect::<Vec<&str>>();
         response = response.replace("${sender}", sender);
